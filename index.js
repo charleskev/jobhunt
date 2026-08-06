@@ -244,7 +244,7 @@ app.use("/", router);
 
 export default app;
 
-if (!process.env.ELECTRON) {
+if (!process.env.ELECTRON && !isServerless) {
   const server = app.listen(PORT, () => console.log(`🔥 XianFire running at http://localhost:${PORT}`));
 
   server.on("error", (err) => {

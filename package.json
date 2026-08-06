@@ -30,6 +30,7 @@
     "multer": "^2.0.2",
     "mysql2": "^3.9.2",
     "sequelize": "^6.37.3",
+    "sqlite3": "^5.1.6",
     "tailwindcss": "^4.1.17"
   },
   "devDependencies": {
