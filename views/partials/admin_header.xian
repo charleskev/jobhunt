@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {{> head}}
+</head>
+<body style="margin: 0; padding: 0;">
+
+    <div class="flex bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800" style="min-height: 100vh;">
+        {{> sidebar-admin}}
+
+        <main class="flex-1 overflow-auto">

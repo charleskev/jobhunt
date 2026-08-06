@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {{> head}}
+    <title>Application Review - HuntJob</title>
+    <style>
+        body { background: #ffffff; margin: 0; padding: 0; }
+        .review-container { padding: 2rem; background: white; }
+        .back-link { color: #3b82f6; text-decoration: none; font-weight: 600; margin-bottom: 1rem; display: inline-block; }
+        .back-link:hover { color: #2563eb; }
+        .header { margin-bottom: 2rem; }
+        .header h1 { font-size: 2rem; font-weight: 700; color: #1e293b; margin: 0; }
+        .header p { color: #64748b; margin: 0.5rem 0 0 0; font-size: 0.875rem; }
+        .content-grid { display: grid; grid-template-columns: 1fr 380px; gap: 2rem; }
+        .card { background: white; border: 1px solid #e2e8f0; border-radius: 0.75rem; padding: 1.5rem; margin-bottom: 1.5rem; }
+        .card-title { font-size: 1.25rem; font-weight: 700; color: #1e293b; margin: 0 0 1rem 0; }
+        .section-title { font-size: 1rem; font-weight: 600; color: #64748b; margin: 0 0 0.5rem 0; }
+        .section-value { font-size: 1rem; font-weight: 600; color: #1e293b; }
+        .profile-section { display: flex; gap: 1rem; margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid #e2e8f0; }
+        .avatar { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 1px solid #e2e8f0; flex-shrink: 0; }
+        .profile-info h2 { font-size: 1.5rem; font-weight: 700; color: #1e293b; margin: 0; }
+        .profile-info p { color: #64748b; margin: 0.25rem 0 0 0; font-size: 0.875rem; }
+        .info-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+        .info-item { }
+        .document-item { display: flex; align-items: center; justify-content: space-between; padding: 1rem; border: 1px solid #e2e8f0; border-radius: 0.5rem; margin-bottom: 0.75rem; }
+        .document-name { font-weight: 600; color: #1e293b; }
+        .document-file { font-size: 0.875rem; color: #64748b; }
+        .btn { padding: 0.75rem 1.5rem; border: none; border-radius: 0.5rem; cursor: pointer; font-weight: 600; font-size: 0.875rem; transition: all 0.3s; }
+        .btn-primary { background: #3b82f6; color: white; }
+        .btn-primary:hover { background: #2563eb; }
+        .btn-shortlist { background: #10b981; color: white; width: 100%; margin-bottom: 0.5rem; }
+        .btn-shortlist:hover { background: #059669; }
+        .btn-interview { background: #8b5cf6; color: white; width: 100%; margin-bottom: 0.5rem; }
+        .btn-interview:hover { background: #7c3aed; }
+        .btn-accept { background: #f59e0b; color: white; width: 100%; margin-bottom: 0.5rem; }
+        .btn-accept:hover { background: #d97706; }
+        .btn-hire { background: #16a34a; color: white; width: 100%; margin-bottom: 0.5rem; }
+        .btn-hire:hover { background: #15803d; }
+        .btn-reject { background: #ef4444; color: white; width: 100%; margin-bottom: 0.5rem; }
+        .btn-reject:hover { background: #dc2626; }
+        .status-badge { display: inline-block; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.875rem; font-weight: 600; }
+        .status-submitted { background: #fef3c7; color: #b45309; }
+        .status-shortlisted { background: #dbeafe; color: #1e40af; }
+        .status-interview { background: #e9d5ff; color: #6b21a8; }
+        .status-hired { background: #d1fae5; color: #065f46; }
+        .status-rejected { background: #fee2e2; color: #991b1b; }
+        .status-pending { background: #f3f4f6; color: #6b7280; }
+        .form-group { margin-bottom: 1rem; }
+        .form-label { display: block; font-weight: 600; color: #1e293b; margin-bottom: 0.5rem; font-size: 0.875rem; }
+        .form-input, .form-select, .form-textarea { width: 100%; padding: 0.75rem; border: 1px solid #e2e8f0; border-radius: 0.5rem; font-size: 0.875rem; color: #1e293b; }
+        .form-input:focus, .form-select:focus, .form-textarea:focus { outline: none; border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
+        .message { padding: 1rem; border-radius: 0.5rem; margin-top: 1rem; display: none; }
+        .message.success { background: #d1fae5; color: #065f46; border: 1px solid #a7f3d0; }
+        .message.error { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
+        .sidebar-card { background: white; border: 1px solid #e2e8f0; border-radius: 0.75rem; padding: 1.5rem; margin-bottom: 1.5rem; }
+        .timeline { font-size: 0.875rem; }
+        .timeline-item { margin-bottom: 1rem; }
+        .timeline-label { color: #64748b; font-weight: 500; }
+        .timeline-value { color: #1e293b; font-weight: 600; margin-top: 0.25rem; }
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); }
+        .modal.active { display: flex; align-items: center; justify-content: center; }
+        .modal-content { background-color: white; border-radius: 0.75rem; padding: 2rem; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); max-width: 500px; width: 90%; }
+        .modal-header { font-size: 1.5rem; font-weight: 700; color: #1e293b; margin-bottom: 1rem; }
+        .modal-close { float: right; font-size: 1.5rem; font-weight: bold; color: #64748b; cursor: pointer; }
+        .modal-close:hover { color: #1e293b; }
+        .modal-input { width: 100%; padding: 0.75rem; border: 1px solid #e2e8f0; border-radius: 0.5rem; margin-bottom: 1rem; font-size: 0.875rem; }
+        .modal-button { background: #3b82f6; color: white; padding: 0.75rem 1.5rem; border: none; border-radius: 0.5rem; cursor: pointer; font-weight: 600; width: 100%; }
+        .modal-button:hover { background: #2563eb; }
+        .modal-button.cancel { background: #e2e8f0; color: #334155; margin-top: 0.5rem; }
+        .modal-button.cancel:hover { background: #cbd5e1; }
+        @media (max-width: 1024px) {
+            .content-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body style="padding-top: 60px;">
+    {{> navbar}}
+    
+    <div style="display: flex;">
+        {{> sidebar-manager}}
+        
+        <div style="flex: 1; overflow-y: auto; height: calc(100vh - 60px);">
+            <div class="review-container">
+                <!-- Header -->
+                <div class="header">
+                    <a href="/hr2.0/applications-list" class="back-link">← Back to Applications</a>
+                    <h1>Application Review</h1>
+                    <p>{{application.applicant.firstName}} {{application.applicant.lastName}} - {{application.job.title}}</p>
+                </div>
+
+                <div class="content-grid">
+                    <!-- Main Content -->
+                    <div>
+                        <!-- Applicant Info -->
+                        <div class="card">
+                            <div class="profile-section">
+                                <img src="{{#if application.applicant.profilePhoto}}{{application.applicant.profilePhoto}}{{else}}/assets/default-avatar.png{{/if}}" alt="Profile" class="avatar">
+                                <div class="profile-info">
+                                    <h2>{{application.applicant.firstName}} {{application.applicant.lastName}}</h2>
+                                    <p>{{application.applicant.email}}</p>
+                                    <p>{{application.applicant.contactNumber}}</p>
+                                    <p>{{application.applicant.address}}</p>
+                                </div>
+                            </div>
+
+                            <div class="info-grid">
+                                <div class="info-item">
+                                    <p class="section-title">Experience</p>
+                                    <p class="section-value">{{application.applicant.experience}} years</p>
+                                </div>
+                                <div class="info-item">
+                                    <p class="section-title">Applied On</p>
+                                    <p class="section-value">{{formatDate application.createdAt}}</p>
+                                </div>
+                                <div class="info-item">
+                                    <p class="section-title">Status</p>
+                                    <span class="status-badge status-{{toLowerCase application.status}}">{{application.status}}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Job Info -->
+                        <div class="card">
+                            <h3 class="card-title">Job Position</h3>
+                            <h4 style="font-size: 1.25rem; font-weight: 700; color: #1e293b; margin: 0 0 1rem 0;">{{application.job.title}}</h4>
+                            <div class="info-grid" style="grid-template-columns: 1fr 1fr;">
+                                <div>
+                                    <p class="section-title">Department</p>
+                                    <p class="section-value">{{application.job.department}}</p>
+                                </div>
+                                <div>
+                                    <p class="section-title">Employment Type</p>
+                                    <p class="section-value">{{application.job.employmentType}}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Documents -->
+                        {{#if application.documents}}
+                        <div class="card">
+                            <h3 class="card-title">Submitted Documents</h3>
+                            {{#each application.documents}}
+                            <div class="document-item">
+                                <div>
+                                    <p class="document-name">{{this.documentType}}</p>
+                                    <p class="document-file">{{this.fileName}}</p>
+                                </div>
+                                <a href="{{this.filePath}}" target="_blank" download class="btn btn-primary" style="margin: 0;">Download</a>
+                            </div>
+                            {{/each}}
+                        </div>
+                        {{/if}}
+
+                        <!-- Assessment Form -->
+                        <div class="card">
+                            <h3 class="card-title">Your Assessment</h3>
+                            <form id="assessmentForm" method="POST" action="/hr2.0/api/applications/{{application.id}}/status">
+                                <div class="form-group">
+                                    <label class="form-label">Status</label>
+                                    <select name="status" class="form-select">
+                                        <option value="pending" {{#if (eq application.status 'pending')}}selected{{/if}}>Pending</option>
+                                        <option value="submitted" {{#if (eq application.status 'submitted')}}selected{{/if}}>Submitted</option>
+                                        <option value="shortlisted" {{#if (eq application.status 'shortlisted')}}selected{{/if}}>Shortlisted</option>
+                                        <option value="interview" {{#if (eq application.status 'interview')}}selected{{/if}}>Interview</option>
+                                        <option value="accepted" {{#if (eq application.status 'accepted')}}selected{{/if}}>Accepted</option>
+                                        <option value="rejected" {{#if (eq application.status 'rejected')}}selected{{/if}}>Rejected</option>
+                                        <option value="hired" {{#if (eq application.status 'hired')}}selected{{/if}}>Hired</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label">Rating (1-5)</label>
+                                    <input type="number" name="rating" min="1" max="5" value="{{application.rating}}" class="form-input">
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label">Feedback</label>
+                                    <textarea name="feedback" rows="4" placeholder="Add your assessment notes here..." class="form-textarea">{{application.feedback}}</textarea>
+                                </div>
+
+                                <button type="submit" class="btn btn-primary" style="width: 100%;">Save Assessment</button>
+                                <div id="assessmentMessage" class="message"></div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Sidebar -->
+                    <div>
+                        <!-- Status Update -->
+                        <div class="sidebar-card">
+                            <h3 class="card-title">Quick Actions</h3>
+                            <button type="button" class="btn btn-shortlist" onclick="updateStatus('shortlisted')">⭐ Shortlist</button>
+                            <button type="button" class="btn btn-interview" onclick="openInterviewModal()">📅 Schedule Interview</button>
+                            <button type="button" class="btn btn-accept" onclick="updateStatus('accepted')">✓ Accept</button>
+                            <button type="button" class="btn btn-hire" onclick="updateStatus('hired')">🎉 Hire</button>
+                            <button type="button" class="btn btn-reject" onclick="updateStatus('rejected')">✕ Reject</button>
+                        </div>
+
+                        <!-- Current Status -->
+                        <div class="sidebar-card">
+                            <h3 class="card-title">Current Status</h3>
+                            {{#eq application.status "pending"}}
+                                <span class="status-badge status-pending">⏳ Pending</span>
+                            {{/eq}}
+                            {{#eq application.status "submitted"}}
+                                <span class="status-badge status-submitted">📤 Submitted</span>
+                            {{/eq}}
+                            {{#eq application.status "shortlisted"}}
+                                <span class="status-badge status-shortlisted">⭐ Shortlisted</span>
+                            {{/eq}}
+                            {{#eq application.status "interview"}}
+                                <span class="status-badge status-interview">📅 Interview</span>
+                            {{/eq}}
+                            {{#eq application.status "accepted"}}
+                                <span class="status-badge status-submitted">✓ Accepted</span>
+                            {{/eq}}
+                            {{#eq application.status "hired"}}
+                                <span class="status-badge status-hired">✓ Hired</span>
+                            {{/eq}}
+                            {{#eq application.status "rejected"}}
+                                <span class="status-badge status-rejected">✕ Rejected</span>
+                            {{/eq}}
+                        </div>
+
+                        <!-- Timeline -->
+                        <div class="sidebar-card">
+                            <h3 class="card-title">Timeline</h3>
+                            <div class="timeline">
+                                <div class="timeline-item">
+                                    <p class="timeline-label">Applied</p>
+                                    <p class="timeline-value">{{formatDate application.createdAt}}</p>
+                                </div>
+                                <div class="timeline-item">
+                                    <p class="timeline-label">Last Updated</p>
+                                    <p class="timeline-value">{{formatDate application.updatedAt}}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{> footer}}
+
+    <!-- Interview Modal -->
+    <div id="interviewModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeModal()">&times;</span>
+            <h2 class="modal-header">Schedule Interview</h2>
+            <form id="interviewForm">
+                <label class="form-label">Interview Date</label>
+                <input type="date" id="interviewDate" class="modal-input" required>
+                
+                <label class="form-label">Interview Time</label>
+                <input type="time" id="interviewTime" class="modal-input" required>
+                
+                <label class="form-label">Interview Type</label>
+                <select id="interviewType" class="modal-input" required>
+                    <option value="">Select Type</option>
+                    <option value="phone">Phone Interview</option>
+                    <option value="video">Video Interview</option>
+                    <option value="in-person">In-Person Interview</option>
+                </select>
+                
+                <label class="form-label">Interviewer Name</label>
+                <input type="text" id="interviewerName" class="modal-input" placeholder="Your name" required>
+                
+                <label class="form-label">Interview Notes (Optional)</label>
+                <textarea id="interviewNotes" class="modal-input" rows="3" placeholder="Add any notes or instructions..."></textarea>
+                
+                <button type="button" onclick="scheduleInterview()" class="modal-button">✓ Schedule Interview</button>
+                <button type="button" onclick="closeModal()" class="modal-button cancel">Cancel</button>
+            </form>
+        </div>
+    </div>
+
+    {{> footer}}
+    <script>
+        function openInterviewModal() {
+            document.getElementById('interviewModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('interviewModal').classList.remove('active');
+        }
+
+        function scheduleInterview() {
+            const date = document.getElementById('interviewDate').value;
+            const time = document.getElementById('interviewTime').value;
+            const type = document.getElementById('interviewType').value;
+            const interviewer = document.getElementById('interviewerName').value;
+            const notes = document.getElementById('interviewNotes').value;
+
+            if (!date || !time || !type || !interviewer) {
+                alert('Please fill in all required fields');
+                return;
+            }
+
+            const interviewData = {
+                status: 'interview',
+                interview: {
+                    date: date,
+                    time: time,
+                    type: type,
+                    interviewer: interviewer,
+                    notes: notes,
+                    scheduledAt: new Date().toISOString()
+                }
+            };
+
+            fetch('/hr2.0/api/applications/{{application.id}}/status', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(interviewData)
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (result.success) {
+                    alert('✓ Interview scheduled successfully!');
+                    closeModal();
+                    setTimeout(() => location.reload(), 1000);
+                } else {
+                    alert('Error: ' + (result.message || 'Failed to schedule interview'));
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error: ' + error.message);
+            });
+        }
+
+        // Change Schedule Interview button to open modal
+        document.addEventListener('DOMContentLoaded', function() {
+            const interviewBtn = document.querySelector('[onclick="updateStatus(\'interview\')"]');
+            if (interviewBtn) {
+                interviewBtn.setAttribute('onclick', 'openInterviewModal()');
+            }
+        });
+
+        document.getElementById('assessmentForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const data = {
+                status: formData.get('status'),
+                rating: formData.get('rating'),
+                feedback: formData.get('feedback')
+            };
+            
+            try {
+                const response = await fetch(e.target.action, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                const messageDiv = document.getElementById('assessmentMessage');
+                
+                if (result.success) {
+                    messageDiv.className = 'message success';
+                    messageDiv.textContent = '✓ Assessment saved successfully!';
+                    messageDiv.style.display = 'block';
+                    
+                    setTimeout(() => {
+                        location.reload();
+                    }, 2000);
+                } else {
+                    messageDiv.className = 'message error';
+                    messageDiv.textContent = '✗ Error: ' + (result.message || 'Failed to save assessment');
+                    messageDiv.style.display = 'block';
+                }
+            } catch (error) {
+                const messageDiv = document.getElementById('assessmentMessage');
+                messageDiv.className = 'message error';
+                messageDiv.textContent = '✗ Error: ' + error.message;
+                messageDiv.style.display = 'block';
+            }
+        });
+
+        function updateStatus(status) {
+            const ratingInput = document.querySelector('input[name="rating"]');
+            const feedbackInput = document.querySelector('textarea[name="feedback"]');
+            
+            const data = {
+                status: status,
+                rating: ratingInput ? ratingInput.value || null : null,
+                feedback: feedbackInput ? feedbackInput.value || '' : ''
+            };
+
+            fetch('/hr2.0/api/applications/{{application.id}}/status', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (result.success) {
+                    alert('✓ Status updated to ' + status + '!');
+                    setTimeout(() => {
+                        location.reload();
+                    }, 1000);
+                } else {
+                    alert('Error: ' + (result.message || 'Failed to update status'));
+                }
+            })
+            .catch(error => alert('Error: ' + error.message));
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('interviewModal');
+            if (event.target == modal) {
+                modal.classList.remove('active');
+            }
+        }
+    </script>
+</body>
+</html>

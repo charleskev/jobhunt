@@ -1,0 +1,1312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {{> head}}
+    
+   
+   
+    <style>
+        /* Hero Animation */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        @keyframes shimmer {
+            0% {
+                background-position: -1000px 0;
+            }
+            100% {
+                background-position: 1000px 0;
+            }
+        }
+
+        @keyframes glow {
+            0%, 100% {
+                box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+            }
+            50% {
+                box-shadow: 0 0 30px rgba(59, 130, 246, 0.8);
+            }
+        }
+
+        .animate-fadeInUp {
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+
+        .animate-slideInDown {
+            animation: slideInDown 0.6s ease-out forwards;
+        }
+
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .animate-pulse-slow {
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .animate-shimmer {
+            animation: shimmer 3s infinite;
+        }
+
+        .animate-glow {
+            animation: glow 2s ease-in-out infinite;
+        }
+
+        /* Gradient Background */
+        .gradient-bg {
+            background: linear-gradient(135deg, #1e40af 0%, #2d3561 50%, #4c1d95 100%);
+        }
+
+        /* Professional Job Portal Colors */
+        .job-portal-primary {
+            background: linear-gradient(to right, #0066cc, #004499);
+        }
+
+        .job-portal-accent {
+            background: linear-gradient(to right, #00a8ff, #0099ff);
+        }
+
+        /* Card Hover Effects */
+        .card-hover {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card-hover:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+
+        /* Glassmorphism */
+        .glass {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        /* Search Bar Animation */
+        .search-container {
+            position: relative;
+        }
+
+        .search-container:focus-within {
+            transform: scale(1.02);
+            box-shadow: 0 20px 40px rgba(102, 126, 234, 0.3);
+        }
+
+        /* Job Card Ribbon */
+        .ribbon {
+            position: absolute;
+            top: 10px;
+            right: -5px;
+            background: #ef4444;
+            color: white;
+            padding: 5px 15px;
+            font-size: 12px;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .ribbon::before {
+            content: '';
+            position: absolute;
+            right: 0;
+            bottom: -5px;
+            border-left: 5px solid #b91c1c;
+            border-bottom: 5px solid transparent;
+        }
+
+        /* Tooltip */
+        .tooltip {
+            position: relative;
+        }
+
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 120px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -60px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /* Loading Skeleton */
+        .skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+        }
+
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* Department Pills */
+        .dept-pill {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .dept-pill:hover {
+            transform: scale(1.1);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        /* Stats Counter Animation */
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Scroll Indicator */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-20px); }
+            60% { transform: translateY(-10px); }
+        }
+
+        /* Category Badge */
+        .category-badge {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .category-badge::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .category-badge:hover::before {
+            left: 100%;
+        }
+
+        /* Alert/Banner */
+        .alert-banner {
+            background: linear-gradient(90deg, #fbbf24, #f59e0b);
+            animation: slideInDown 0.5s ease-out;
+        }
+
+        @keyframes slideInDown {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.65rem 1rem;
+            border-radius: 9999px;
+            background: rgba(255, 255, 255, 0.16);
+            border: 1px solid rgba(255, 255, 255, 0.24);
+            backdrop-filter: blur(18px);
+            color: #e0f2fe;
+            font-size: 0.9rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .hero-card {
+            background: rgba(255, 255, 255, 0.96);
+            border: 1px solid rgba(226, 232, 240, 0.9);
+            border-radius: 2rem;
+            padding: 1.5rem;
+            box-shadow: 0 24px 70px rgba(15, 23, 42, 0.2);
+            backdrop-filter: blur(16px);
+        }
+
+        .hero-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            padding: 0.6rem 0.9rem;
+            border-radius: 9999px;
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            color: #e0f2fe;
+            font-size: 0.92rem;
+            font-weight: 600;
+        }
+
+        .soft-card {
+            border-radius: 1rem;
+            border: 1px solid #e2e8f0;
+            background: linear-gradient(135deg, #f8fbff 0%, #eef6ff 100%);
+            padding: 0.9rem 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .soft-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px rgba(15, 23, 42, 0.08);
+        }
+
+        .highlight-stat {
+            background: linear-gradient(135deg, #ecfeff 0%, #eff6ff 100%);
+            border: 1px solid #bae6fd;
+            color: #0f172a;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    
+    <!-- Navigation -->
+    {{> navbar}}
+
+    <!-- Alert Banner (Optional - for announcements) -->
+    <div class="alert-banner text-white py-3 px-4 text-center">
+        <div class="container mx-auto flex items-center justify-center">
+            <i class="fas fa-bullhorn mr-3"></i>
+            <span class="font-semibold">🎉 New Job Openings! 50+ positions available this month.</span>
+            <a href="/jobs" class="ml-4 underline hover:no-underline">View All →</a>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="relative overflow-hidden min-h-screen flex items-center bg-gradient-to-br from-slate-950 via-indigo-950 to-cyan-900">
+        <div class="absolute inset-0 overflow-hidden opacity-30">
+            <div class="absolute -top-28 -left-20 w-80 h-80 bg-cyan-400 rounded-full mix-blend-screen animate-float blur-3xl"></div>
+            <div class="absolute -bottom-24 -right-20 w-96 h-96 bg-fuchsia-400 rounded-full mix-blend-screen animate-float blur-3xl" style="animation-delay: 1.2s;"></div>
+            <div class="absolute top-1/3 right-1/4 w-64 h-64 bg-emerald-300 rounded-full mix-blend-screen animate-float blur-3xl" style="animation-delay: 0.8s;"></div>
+        </div>
+
+        <div class="absolute inset-0 opacity-10" style="background-image: linear-gradient(90deg, white 1px, transparent 1px), linear-gradient(white 1px, transparent 1px); background-size: 48px 48px;"></div>
+
+        <div class="container mx-auto px-4 py-20 relative z-10">
+            <div class="grid lg:grid-cols-[1.1fr_0.9fr] gap-10 items-center">
+                <div class="max-w-2xl animate-fadeInUp">
+                    <div class="hero-badge mb-6">
+                        <i class="fas fa-shield-alt text-emerald-300"></i>
+                        <span>Verified municipal career portal</span>
+                    </div>
+
+                    <h1 class="text-5xl md:text-6xl xl:text-7xl font-black text-white leading-tight drop-shadow-2xl">
+                        Make an impact with
+                        <span class="block mt-3 bg-gradient-to-r from-cyan-300 via-sky-200 to-violet-200 bg-clip-text text-transparent">
+                            the right government job
+                        </span>
+                    </h1>
+
+                    <p class="mt-6 text-lg md:text-xl text-slate-200 leading-8 max-w-xl">
+                        Explore secure, transparent job openings with guided applications, real-time updates, and career support for your municipal journey.
+                    </p>
+
+                    <div class="flex flex-wrap gap-3 mt-8">
+                        <div class="hero-chip"><i class="fas fa-check-circle text-emerald-300"></i>Verified employers</div>
+                        <div class="hero-chip"><i class="fas fa-rocket text-sky-300"></i>Easy applications</div>
+                        <div class="hero-chip"><i class="fas fa-bell text-violet-300"></i>Instant updates</div>
+                    </div>
+
+                    <div class="flex flex-wrap gap-4 mt-10">
+                        <a href="/jobs" class="inline-flex items-center gap-2 rounded-2xl bg-white px-6 py-3.5 font-bold text-slate-900 shadow-xl transition hover:scale-105 hover:bg-slate-100">
+                            <i class="fas fa-briefcase"></i>
+                            Explore open roles
+                        </a>
+                        {{#unless user}}
+                        <a href="/auth/register" class="inline-flex items-center gap-2 rounded-2xl border border-white/30 bg-white/10 px-6 py-3.5 font-bold text-white backdrop-blur transition hover:bg-white/20 hover:scale-105">
+                            <i class="fas fa-user-plus"></i>
+                            Create account
+                        </a>
+                        {{/unless}}
+                    </div>
+                </div>
+
+                <div class="animate-fadeInUp" style="animation-delay: 0.1s;">
+                    <div class="hero-card">
+                        <div class="flex items-start justify-between mb-5">
+                            <div>
+                                <p class="text-sm font-semibold uppercase tracking-[0.2em] text-sky-600">Opportunities now</p>
+                                <h2 class="text-2xl font-black text-slate-900">Your next role starts here</h2>
+                            </div>
+                            <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-700">
+                                <i class="fas fa-magic text-xl"></i>
+                            </div>
+                        </div>
+
+                        <div class="space-y-3 mb-6">
+                            <div class="soft-card highlight-stat">
+                                <div>
+                                    <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Open positions</p>
+                                    <p class="font-bold text-slate-900">{{stats.totalJobs}}+ active roles</p>
+                                </div>
+                                <i class="fas fa-briefcase text-sky-600"></i>
+                            </div>
+                            <div class="soft-card">
+                                <div>
+                                    <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Hiring pace</p>
+                                    <p class="font-bold text-slate-900">New roles added weekly</p>
+                                </div>
+                                <i class="fas fa-calendar-check text-emerald-600"></i>
+                            </div>
+                            <div class="soft-card">
+                                <div>
+                                    <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Support</p>
+                                    <p class="font-bold text-slate-900">Help at every step</p>
+                                </div>
+                                <i class="fas fa-headset text-violet-600"></i>
+                            </div>
+                        </div>
+
+                        <form method="GET" action="/jobs" class="space-y-3">
+                            <div class="relative">
+                                <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                                <input
+                                    type="text"
+                                    name="search"
+                                    placeholder="Search job title or keyword"
+                                    class="w-full rounded-2xl border border-slate-200 bg-slate-50 py-3.5 pl-11 pr-4 text-slate-700 outline-none transition focus:border-sky-500 focus:bg-white"
+                                    value="{{#if search}}{{search}}{{/if}}"
+                                >
+                            </div>
+
+                            <div class="grid md:grid-cols-2 gap-3">
+                                <div class="relative">
+                                    <i class="fas fa-building absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                                    <select name="department" class="w-full appearance-none rounded-2xl border border-slate-200 bg-slate-50 py-3.5 pl-11 pr-4 text-slate-700 outline-none transition focus:border-sky-500 focus:bg-white">
+                                        <option value="">All Departments</option>
+                                        {{#if departments}}
+                                            {{#each departments}}
+                                                <option value="{{this}}">{{this}}</option>
+                                            {{/each}}
+                                        {{else}}
+                                            <option value="Engineering">Engineering</option>
+                                            <option value="Health">Health</option>
+                                            <option value="Education">Education</option>
+                                            <option value="Agriculture">Agriculture</option>
+                                            <option value="Social Welfare">Social Welfare</option>
+                                            <option value="Finance">Finance</option>
+                                        {{/if}}
+                                    </select>
+                                </div>
+
+                                <div class="relative">
+                                    <i class="fas fa-briefcase absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                                    <select name="type" class="w-full appearance-none rounded-2xl border border-slate-200 bg-slate-50 py-3.5 pl-11 pr-4 text-slate-700 outline-none transition focus:border-sky-500 focus:bg-white">
+                                        <option value="">Job Type</option>
+                                        <option value="Full-time">Full-time</option>
+                                        <option value="Part-time">Part-time</option>
+                                        <option value="Contract">Contract</option>
+                                        <option value="Casual">Casual</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="w-full rounded-2xl bg-gradient-to-r from-sky-600 to-indigo-600 px-5 py-3.5 font-bold text-white shadow-lg transition hover:scale-[1.01] hover:shadow-xl">
+                                <i class="fas fa-search mr-2"></i>Find matching jobs
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-14 animate-fadeInUp" style="animation-delay: 0.2s;">
+                <div class="rounded-3xl border border-white/20 bg-white/10 p-8 text-center text-white shadow-xl backdrop-blur-xl">
+                    <div class="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-cyan-400/20 text-cyan-200">
+                        <i class="fas fa-briefcase text-2xl"></i>
+                    </div>
+                    <div class="stat-number text-4xl font-black text-white mb-2">{{stats.totalJobs}}</div>
+                    <div class="font-semibold text-slate-100">Active positions</div>
+                    <div class="mt-2 text-sm text-slate-300">Fresh opportunities across departments</div>
+                </div>
+
+                <div class="rounded-3xl border border-white/20 bg-white/10 p-8 text-center text-white shadow-xl backdrop-blur-xl">
+                    <div class="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-sky-400/20 text-sky-200">
+                        <i class="fas fa-building text-2xl"></i>
+                    </div>
+                    <div class="stat-number text-4xl font-black text-white mb-2">{{stats.departments}}</div>
+                    <div class="font-semibold text-slate-100">Departments</div>
+                    <div class="mt-2 text-sm text-slate-300">Verified roles for every career path</div>
+                </div>
+
+                <div class="rounded-3xl border border-white/20 bg-white/10 p-8 text-center text-white shadow-xl backdrop-blur-xl">
+                    <div class="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-violet-400/20 text-violet-200">
+                        <i class="fas fa-users text-2xl"></i>
+                    </div>
+                    <div class="stat-number text-4xl font-black text-white mb-2">{{stats.totalApplications}}</div>
+                    <div class="font-semibold text-slate-100">Successful applicants</div>
+                    <div class="mt-2 text-sm text-slate-300">Joined through this trusted platform</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="scroll-indicator text-white text-3xl">
+            <i class="fas fa-chevron-down animate-pulse-slow"></i>
+        </div>
+    </section>
+
+    <!-- Featured Jobs Section -->
+    <section class="py-24 bg-gradient-to-b from-gray-50 via-white to-gray-50">
+        <div class="container mx-auto px-4">
+            <!-- Professional Section Header -->
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-16 animate-fadeInUp">
+                <div>
+                    <div class="inline-block text-sm font-bold text-blue-600 mb-4 px-4 py-2 bg-blue-100 rounded-full border border-blue-300">
+                        🔥 HOT JOB OPENINGS
+                    </div>
+                    <h2 class="text-5xl font-black text-gray-900 mb-4 leading-tight">
+                        Featured <span class="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Opportunities</span>
+                    </h2>
+                    <p class="text-gray-600 text-lg font-medium">Explore the latest premium positions across our municipality</p>
+                </div>
+                <a href="/jobs" class="mt-6 md:mt-0 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-4 rounded-xl font-bold transition-all transform hover:scale-105 shadow-lg hover:shadow-xl inline-flex items-center gap-2">
+                    Explore All Jobs <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+
+            <!-- Jobs Grid with Enhanced Cards -->
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {{#if featuredJobs}}
+                    {{#each featuredJobs}}
+                    <div class="card-hover group bg-white rounded-3xl shadow-lg hover:shadow-2xl overflow-hidden border border-gray-100 relative transition-all duration-300">
+                        <!-- Premium Badge/Ribbon for New Jobs -->
+                        {{#if job.createdAt}}
+                        <div class="ribbon text-xs font-black">
+                            <i class="fas fa-star mr-1"></i>NEW
+                        </div>
+                        {{/if}}
+
+                        <!-- Card Content -->
+                        <div class="p-8">
+                            <!-- Header with Department and Save -->
+                            <div class="flex justify-between items-start mb-6">
+                                <!-- Department Badge with Icon -->
+                                <div class="category-badge bg-gradient-to-r from-blue-600 to-blue-500 text-white px-4 py-2 rounded-full text-sm font-bold shadow-md inline-flex items-center gap-2">
+                                    <i class="fas fa-tag text-lg"></i>{{job.department}}
+                                </div>
+
+                                <!-- Favorite/Save Button -->
+                                {{#if user}}
+                                <button 
+                                    onclick="toggleSaveJob('{{job.id}}', this)"
+                                    class="tooltip text-gray-300 hover:text-red-500 transition-all transform hover:scale-125"
+                                    title="Save Job"
+                                >
+                                    <i class="far fa-heart text-3xl"></i>
+                                    <span class="tooltiptext">Save Job</span>
+                                </button>
+                                {{/if}}
+                            </div>
+
+                            <!-- Job Title with Better Typography -->
+                            <h3 class="text-2xl font-bold text-gray-900 mb-4 group-hover:text-blue-600 transition line-clamp-2">
+                                <a href="/jobs/{{job.id}}" class="hover:underline">{{job.title}}</a>
+                            </h3>
+
+                            <!-- Company/Organization Info -->
+                            <div class="flex items-center text-gray-600 mb-6 pb-6 border-b border-gray-100">
+                                <div class="w-14 h-14 bg-gradient-to-br from-blue-100 to-blue-50 rounded-2xl flex items-center justify-center mr-4 group-hover:scale-110 transition">
+                                    <i class="fas fa-building text-blue-600 text-2xl"></i>
+                                </div>
+                                <div>
+                                    <div class="font-bold text-gray-900">Municipal Government</div>
+                                    <div class="text-sm text-gray-500 flex items-center gap-1">
+                                        <i class="fas fa-map-marker-alt"></i>Local Office
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Job Details Grid -->
+                            <div class="space-y-4 mb-8">
+                                <!-- Employment Type -->
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                                        <i class="fas fa-clock text-blue-600 text-lg"></i>
+                                    </div>
+                                    <div>
+                                        <div class="text-xs font-semibold text-gray-500 uppercase">Type</div>
+                                        <span class="text-gray-800 font-bold">{{job.employmentType}}</span>
+                                    </div>
+                                </div>
+
+                                <!-- Deadline -->
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                                        <i class="fas fa-calendar-check text-green-600 text-lg"></i>
+                                    </div>
+                                    <div>
+                                        <div class="text-xs font-semibold text-gray-500 uppercase">Deadline</div>
+                                        <span class="text-gray-800 font-bold">{{format_date job.deadline}}</span>
+                                    </div>
+                                </div>
+
+                                <!-- Salary if Available -->
+                                {{#if job.salaryRange}}
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 bg-yellow-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                                        <i class="fas fa-money-bill-wave text-yellow-600 text-lg"></i>
+                                    </div>
+                                    <div>
+                                        <div class="text-xs font-semibold text-gray-500 uppercase">Salary</div>
+                                        <span class="text-gray-800 font-bold">{{job.salaryRange}}</span>
+                                    </div>
+                                </div>
+                                {{/if}}
+
+                                <!-- Positions Available -->
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                                        <i class="fas fa-users text-purple-600 text-lg"></i>
+                                    </div>
+                                    <div>
+                                        <div class="text-xs font-semibold text-gray-500 uppercase">Openings</div>
+                                        <span class="text-gray-800 font-bold">{{job.positions}} Position{{#if job.positions}}{{#unless job.positions}}s{{/unless}}{{/if}}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Description Preview -->
+                            {{#if job.description}}
+                            <p class="text-gray-600 text-sm mb-8 line-clamp-3 leading-relaxed">
+                                {{job.description}}
+                            </p>
+                            {{/if}}
+
+                            <!-- Action Buttons -->
+                            <div class="flex gap-3">
+                                <a 
+                                    href="/jobs/{{job.id}}" 
+                                    class="flex-1 text-center bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white py-3 rounded-xl font-bold transition-all shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-95 inline-flex items-center justify-center gap-2"
+                                >
+                                    <i class="fas fa-eye"></i>View Details
+                                </a>
+                                {{#if ../user}}
+                                <a 
+                                    href="/applicant/apply/{{job.id}}" 
+                                    class="flex-1 text-center bg-white border-2 border-blue-600 text-blue-600 hover:bg-blue-50 py-3 rounded-xl font-bold transition-all transform hover:scale-105 active:scale-95 inline-flex items-center justify-center gap-2"
+                                >
+                                    <i class="fas fa-paper-plane"></i>Apply Now
+                                </a>
+                                {{/if}}
+                            </div>
+
+                            <!-- View Stats -->
+                            <div class="mt-6 pt-6 border-t border-gray-100 flex items-center justify-between text-xs text-gray-500">
+                                <span class="flex items-center gap-1">
+                                    <i class="fas fa-eye text-gray-400"></i>{{#if job.viewCount}}{{job.viewCount}}{{else}}0{{/if}} views
+                                </span>
+                                <span class="flex items-center gap-1">
+                                    <i class="fas fa-clock text-gray-400"></i>Recently posted
+                                </span>
+                                <span class="flex items-center gap-1">
+                                    <i class="fas fa-heart text-gray-400"></i>{{#if job.savedCount}}{{job.savedCount}}{{else}}0{{/if}} saved
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    {{/each}}
+                {{else}}
+                    <!-- No Jobs Available State -->
+                    <div class="col-span-full text-center py-24">
+                        <div class="w-32 h-32 bg-gradient-to-br from-gray-200 to-gray-100 rounded-full mx-auto mb-8 flex items-center justify-center shadow-lg">
+                            <i class="fas fa-briefcase text-6xl text-gray-400"></i>
+                        </div>
+                        <h3 class="text-3xl font-bold text-gray-800 mb-3">No Jobs Available Yet</h3>
+                        <p class="text-gray-600 mb-8 text-lg">Check back soon for exciting new opportunities in your municipality!</p>
+                        {{#unless user}}
+                        <a href="/auth/register" class="inline-block bg-blue-600 hover:bg-blue-700 text-white px-10 py-4 rounded-xl font-bold transition-all transform hover:scale-105 shadow-lg">
+                            <i class="fas fa-user-plus mr-2"></i>Create Your Account
+                        </a>
+                        {{/unless}}
+                    </div>
+                {{/if}}
+            </div>
+        </div>
+    </section>
+
+    <!-- Job Categories/Departments Section -->
+    <section class="py-24 bg-white">
+        <div class="container mx-auto px-4">
+            <!-- Section Header -->
+            <div class="text-center mb-16 animate-fadeInUp">
+                <div class="inline-block text-sm font-bold text-blue-600 mb-4 px-4 py-2 bg-blue-100 rounded-full border border-blue-300">
+                    💼 CAREER PATHS
+                </div>
+                <h2 class="text-5xl font-black text-gray-900 mb-4 leading-tight">
+                    Browse by <span class="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Department</span>
+                </h2>
+                <p class="text-gray-600 text-lg font-medium">Find opportunities in your field of expertise and passion</p>
+            </div>
+
+            <!-- Department Grid with Enhanced Cards -->
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-5">
+                {{#if departments}}
+                    {{#each departments}}
+                    <a href="/jobs?department={{this}}" class="group">
+                        <div class="bg-gradient-to-br from-blue-50 to-blue-100 hover:from-blue-100 hover:to-blue-200 rounded-3xl p-8 text-center transition-all transform hover:scale-110 cursor-pointer border-2 border-blue-200 hover:border-blue-400 shadow-lg hover:shadow-2xl duration-300">
+                            <div class="w-20 h-20 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl mx-auto mb-4 flex items-center justify-center group-hover:rotate-12 group-hover:scale-110 transition duration-300 shadow-lg">
+                                <i class="fas fa-building text-3xl text-white"></i>
+                            </div>
+                            <h3 class="font-bold text-gray-900 text-base mb-2 group-hover:text-blue-600 transition">{{this}}</h3>
+                            <p class="text-xs text-gray-600 font-medium">Explore Opportunities</p>
+                            <div class="mt-3 pt-3 border-t border-blue-200 text-blue-600 font-bold text-sm">
+                                View Jobs <i class="fas fa-arrow-right ml-1 group-hover:translate-x-1 transition-transform"></i>
+                            </div>
+                        </div>
+                    </a>
+                    {{/each}}
+                {{else}}
+                    <!-- Default Department Cards with Better Icons -->
+                    <a href="/jobs?department=Engineering" class="group">
+                        <div class="bg-gradient-to-br from-blue-50 to-blue-100 hover:from-blue-100 hover:to-blue-200 rounded-3xl p-8 text-center transition-all transform hover:scale-110 cursor-pointer border-2 border-blue-200 hover:border-blue-400 shadow-lg hover:shadow-2xl">
+                            <div class="w-20 h-20 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl mx-auto mb-4 flex items-center justify-center group-hover:rotate-12 group-hover:scale-110 transition">
+                                <i class="fas fa-hard-hat text-3xl text-white"></i>
+                            </div>
+                            <h3 class="font-bold text-gray-900 text-base mb-2">Engineering</h3>
+                            <p class="text-xs text-gray-600">Explore Positions</p>
+                        </div>
+                    </a>
+                    <a href="/jobs?department=Health" class="group">
+                        <div class="bg-gradient-to-br from-red-50 to-red-100 hover:from-red-100 hover:to-red-200 rounded-3xl p-8 text-center transition-all transform hover:scale-110 cursor-pointer border-2 border-red-200 hover:border-red-400 shadow-lg hover:shadow-2xl">
+                            <div class="w-20 h-20 bg-gradient-to-br from-red-500 to-red-600 rounded-2xl mx-auto mb-4 flex items-center justify-center group-hover:rotate-12 group-hover:scale-110 transition">
+                                <i class="fas fa-heartbeat text-3xl text-white"></i>
+                            </div>
+                            <h3 class="font-bold text-gray-900 text-base mb-2">Health</h3>
+                            <p class="text-xs text-gray-600">Explore Positions</p>
+                        </div>
+                    </a>
+                    <a href="/jobs?department=Education" class="group">
+                        <div class="bg-gradient-to-br from-green-50 to-green-100 hover:from-green-100 hover:to-green-200 rounded-3xl p-8 text-center transition-all transform hover:scale-110 cursor-pointer border-2 border-green-200 hover:border-green-400 shadow-lg hover:shadow-2xl">
+                            <div class="w-20 h-20 bg-gradient-to-br from-green-500 to-green-600 rounded-2xl mx-auto mb-4 flex items-center justify-center group-hover:rotate-12 group-hover:scale-110 transition">
+                                <i class="fas fa-graduation-cap text-3xl text-white"></i>
+                            </div>
+                            <h3 class="font-bold text-gray-900 text-base mb-2">Education</h3>
+                            <p class="text-xs text-gray-600">Explore Positions</p>
+                        </div>
+                    </a>
+                    <a href="/jobs?department=Agriculture" class="group">
+                        <div class="bg-gradient-to-br from-yellow-50 to-yellow-100 hover:from-yellow-100 hover:to-yellow-200 rounded-3xl p-8 text-center transition-all transform hover:scale-110 cursor-pointer border-2 border-yellow-200 hover:border-yellow-400 shadow-lg hover:shadow-2xl">
+                            <div class="w-20 h-20 bg-gradient-to-br from-yellow-500 to-yellow-600 rounded-2xl mx-auto mb-4 flex items-center justify-center group-hover:rotate-12 group-hover:scale-110 transition">
+                                <i class="fas fa-leaf text-3xl text-white"></i>
+                            </div>
+                            <h3 class="font-bold text-gray-900 text-base mb-2">Agriculture</h3>
+                            <p class="text-xs text-gray-600">Explore Positions</p>
+                        </div>
+                    </a>
+                    <a href="/jobs?department=Social%20Welfare" class="group">
+                        <div class="bg-gradient-to-br from-pink-50 to-pink-100 hover:from-pink-100 hover:to-pink-200 rounded-3xl p-8 text-center transition-all transform hover:scale-110 cursor-pointer border-2 border-pink-200 hover:border-pink-400 shadow-lg hover:shadow-2xl">
+                            <div class="w-20 h-20 bg-gradient-to-br from-pink-500 to-pink-600 rounded-2xl mx-auto mb-4 flex items-center justify-center group-hover:rotate-12 group-hover:scale-110 transition">
+                                <i class="fas fa-hands-helping text-3xl text-white"></i>
+                            </div>
+                            <h3 class="font-bold text-gray-900 text-base mb-2">Social Welfare</h3>
+                            <p class="text-xs text-gray-600">Explore Positions</p>
+                        </div>
+                    </a>
+                    <a href="/jobs?department=Finance" class="group">
+                        <div class="bg-gradient-to-br from-indigo-50 to-indigo-100 hover:from-indigo-100 hover:to-indigo-200 rounded-3xl p-8 text-center transition-all transform hover:scale-110 cursor-pointer border-2 border-indigo-200 hover:border-indigo-400 shadow-lg hover:shadow-2xl">
+                            <div class="w-20 h-20 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-2xl mx-auto mb-4 flex items-center justify-center group-hover:rotate-12 group-hover:scale-110 transition">
+                                <i class="fas fa-coins text-3xl text-white"></i>
+                            </div>
+                            <h3 class="font-bold text-gray-900 text-base mb-2">Finance</h3>
+                            <p class="text-xs text-gray-600">Explore Positions</p>
+                        </div>
+                    </a>
+                {{/if}}
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="py-24 bg-gradient-to-br from-blue-50 via-white to-purple-50">
+        <div class="container mx-auto px-4">
+            <!-- Section Header -->
+            <div class="text-center mb-20 animate-fadeInUp">
+                <div class="inline-block text-sm font-bold text-blue-600 mb-4 px-4 py-2 bg-blue-100 rounded-full border border-blue-300">
+                    🚀 SIMPLE PROCESS
+                </div>
+                <h2 class="text-5xl font-black text-gray-900 mb-4 leading-tight">
+                    Your Path to <span class="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Success</span>
+                </h2>
+                <p class="text-gray-600 text-lg font-medium">Get hired in 4 simple steps</p>
+            </div>
+
+            <!-- Steps Grid with Connection -->
+            <div class="grid md:grid-cols-4 gap-8 relative">
+                <!-- Connection Lines (Desktop Only) -->
+                <div class="hidden md:block absolute top-32 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-blue-300 to-transparent" style="z-index: 0;"></div>
+
+                <!-- Step 1: Sign Up -->
+                <div class="relative z-10 text-center animate-fadeInUp" style="animation-delay: 0.1s;">
+                    <div class="w-24 h-24 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full mx-auto mb-8 flex items-center justify-center shadow-2xl transform hover:scale-110 transition duration-300">
+                        <i class="fas fa-user-plus text-4xl text-white"></i>
+                    </div>
+                    <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition border border-gray-100">
+                        <div class="inline-block bg-blue-100 text-blue-600 font-bold text-sm px-4 py-2 rounded-full mb-4">Step 1</div>
+                        <h3 class="font-bold text-2xl mb-3 text-gray-900">Create Account</h3>
+                        <p class="text-gray-600 text-base leading-relaxed">Sign up with your email and complete your profile with essential information and qualifications.</p>
+                    </div>
+                </div>
+
+                <!-- Step 2: Browse Jobs -->
+                <div class="relative z-10 text-center animate-fadeInUp" style="animation-delay: 0.2s;">
+                    <div class="w-24 h-24 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-full mx-auto mb-8 flex items-center justify-center shadow-2xl transform hover:scale-110 transition duration-300">
+                        <i class="fas fa-search text-4xl text-white"></i>
+                    </div>
+                    <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition border border-gray-100">
+                        <div class="inline-block bg-cyan-100 text-cyan-600 font-bold text-sm px-4 py-2 rounded-full mb-4">Step 2</div>
+                        <h3 class="font-bold text-2xl mb-3 text-gray-900">Search & Explore</h3>
+                        <p class="text-gray-600 text-base leading-relaxed">Browse thousands of positions filtered by department, location, salary, and employment type.</p>
+                    </div>
+                </div>
+
+                <!-- Step 3: Apply -->
+                <div class="relative z-10 text-center animate-fadeInUp" style="animation-delay: 0.3s;">
+                    <div class="w-24 h-24 bg-gradient-to-br from-green-500 to-teal-600 rounded-full mx-auto mb-8 flex items-center justify-center shadow-2xl transform hover:scale-110 transition duration-300">
+                        <i class="fas fa-file-alt text-4xl text-white"></i>
+                    </div>
+                    <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition border border-gray-100">
+                        <div class="inline-block bg-green-100 text-green-600 font-bold text-sm px-4 py-2 rounded-full mb-4">Step 3</div>
+                        <h3 class="font-bold text-2xl mb-3 text-gray-900">Submit Application</h3>
+                        <p class="text-gray-600 text-base leading-relaxed">Upload your documents, cover letter, and qualifications directly through our secure portal.</p>
+                    </div>
+                </div>
+
+                <!-- Step 4: Success -->
+                <div class="relative z-10 text-center animate-fadeInUp" style="animation-delay: 0.4s;">
+                    <div class="w-24 h-24 bg-gradient-to-br from-yellow-500 to-orange-600 rounded-full mx-auto mb-8 flex items-center justify-center shadow-2xl transform hover:scale-110 transition duration-300">
+                        <i class="fas fa-check-circle text-4xl text-white"></i>
+                    </div>
+                    <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition border border-gray-100">
+                        <div class="inline-block bg-yellow-100 text-yellow-600 font-bold text-sm px-4 py-2 rounded-full mb-4">Step 4</div>
+                        <h3 class="font-bold text-2xl mb-3 text-gray-900">Get Hired</h3>
+                        <p class="text-gray-600 text-base leading-relaxed">Track progress, attend interviews, and receive your job offer notification through our platform.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+<!-- Why Choose Us Section -->
+<section class="py-20 bg-white">
+    <div class="container mx-auto px-4">
+        <div class="grid lg:grid-cols-2 gap-12 items-center">
+            <!-- Left Side - Image/Illustration -->
+            <div class="relative">
+                <div class="absolute inset-0 bg-gradient-to-br from-purple-200 to-pink-200 rounded-3xl transform rotate-6"></div>
+                <div class="relative bg-white rounded-3xl shadow-2xl p-8">
+                    <img src="/images/job-search-illustration.svg" alt="Job Search" class="w-full" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                    <div class="text-center py-20 hidden">
+                        <i class="fas fa-briefcase text-9xl text-purple-300"></i>
+                    </div>
+                    
+                    <!-- Floating Cards -->
+                    <div class="absolute -top-6 -right-6 bg-white rounded-2xl shadow-xl p-4 animate-float">
+                        <div class="flex items-center gap-3">
+                            <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
+                                <i class="fas fa-check text-green-600 text-xl"></i>
+                            </div>
+                            <div>
+                                <div class="font-bold text-gray-800">95% Success</div>
+                                <div class="text-xs text-gray-500">Placement Rate</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="absolute -bottom-6 -left-6 bg-white rounded-2xl shadow-xl p-4 animate-float" style="animation-delay: 1s;">
+                        <div class="flex items-center gap-3">
+                            <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
+                                <i class="fas fa-users text-blue-600 text-xl"></i>
+                            </div>
+                            <div>
+                                <div class="font-bold text-gray-800">2,000+</div>
+                                <div class="text-xs text-gray-500">Happy Employees</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Side - Benefits -->
+            <div>
+                <h2 class="text-4xl font-bold text-gray-800 mb-6">
+                    Why Choose Our Municipal Portal?
+                </h2>
+                <p class="text-gray-600 text-lg mb-8">
+                    We're committed to making government employment accessible, transparent, and efficient for everyone.
+                </p>
+
+                <div class="space-y-6">
+                    <!-- Benefit 1 -->
+                    <div class="flex items-start gap-4 p-4 rounded-xl hover:bg-purple-50 transition">
+                        <div class="w-14 h-14 bg-purple-100 rounded-2xl flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-bolt text-purple-600 text-2xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-xl text-gray-800 mb-2">Fast & Easy Application</h3>
+                            <p class="text-gray-600">Apply to multiple positions with one profile. No more repetitive forms!</p>
+                        </div>
+                    </div>
+
+                    <!-- Benefit 2 -->
+                    <div class="flex items-start gap-4 p-4 rounded-xl hover:bg-blue-50 transition">
+                        <div class="w-14 h-14 bg-blue-100 rounded-2xl flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-shield-alt text-blue-600 text-2xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-xl text-gray-800 mb-2">Secure & Transparent</h3>
+                            <p class="text-gray-600">Your data is protected and the hiring process is completely transparent.</p>
+                        </div>
+                    </div>
+
+                    <!-- Benefit 3 -->
+                    <div class="flex items-start gap-4 p-4 rounded-xl hover:bg-green-50 transition">
+                        <div class="w-14 h-14 bg-green-100 rounded-2xl flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-chart-line text-green-600 text-2xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-xl text-gray-800 mb-2">Real-Time Tracking</h3>
+                            <p class="text-gray-600">Monitor your application status and get instant notifications on updates.</p>
+                        </div>
+                    </div>
+
+                    <!-- Benefit 4 -->
+                    <div class="flex items-start gap-4 p-4 rounded-xl hover:bg-yellow-50 transition">
+                        <div class="w-14 h-14 bg-yellow-100 rounded-2xl flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-hands-helping text-yellow-600 text-2xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-xl text-gray-800 mb-2">Dedicated Support</h3>
+                            <p class="text-gray-600">Our HR team is here to help you throughout the entire hiring process.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials Section -->
+<section class="py-20 bg-gradient-to-br from-gray-50 to-gray-100">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-16">
+            <h2 class="text-4xl font-bold text-gray-800 mb-3">
+                <i class="fas fa-quote-left text-purple-600 mr-2"></i>
+                Success Stories
+            </h2>
+            <p class="text-gray-600 text-lg">Hear from our community members who found their dream jobs</p>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-8">
+            <!-- Testimonial 1 -->
+            <div class="bg-white rounded-2xl shadow-lg p-8 hover:shadow-2xl transition transform hover:-translate-y-2">
+                <div class="flex items-center mb-6">
+                    <div class="w-16 h-16 bg-gradient-to-br from-purple-400 to-pink-400 rounded-full flex items-center justify-center text-white font-bold text-xl">
+                        MC
+                    </div>
+                    <div class="ml-4">
+                        <h4 class="font-bold text-gray-800">Maria Cruz</h4>
+                        <p class="text-sm text-gray-500">Civil Engineer</p>
+                    </div>
+                </div>
+                <div class="text-yellow-400 mb-4">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                </div>
+                <p class="text-gray-600 italic">
+                    "The application process was so smooth! I got hired within 2 weeks. The portal made everything transparent and easy to track."
+                </p>
+            </div>
+
+            <!-- Testimonial 2 -->
+            <div class="bg-white rounded-2xl shadow-lg p-8 hover:shadow-2xl transition transform hover:-translate-y-2">
+                <div class="flex items-center mb-6">
+                    <div class="w-16 h-16 bg-gradient-to-br from-blue-400 to-cyan-400 rounded-full flex items-center justify-center text-white font-bold text-xl">
+                        JS
+                    </div>
+                    <div class="ml-4">
+                        <h4 class="font-bold text-gray-800">Juan Santos</h4>
+                        <p class="text-sm text-gray-500">Healthcare Worker</p>
+                    </div>
+                </div>
+                <div class="text-yellow-400 mb-4">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                </div>
+                <p class="text-gray-600 italic">
+                    "Best decision I made! The support team was very helpful, and I love serving my community now. Highly recommended!"
+                </p>
+            </div>
+
+            <!-- Testimonial 3 -->
+            <div class="bg-white rounded-2xl shadow-lg p-8 hover:shadow-2xl transition transform hover:-translate-y-2">
+                <div class="flex items-center mb-6">
+                    <div class="w-16 h-16 bg-gradient-to-br from-green-400 to-teal-400 rounded-full flex items-center justify-center text-white font-bold text-xl">
+                        AR
+                    </div>
+                    <div class="ml-4">
+                        <h4 class="font-bold text-gray-800">Anna Reyes</h4>
+                        <p class="text-sm text-gray-500">Teacher</p>
+                    </div>
+                </div>
+                <div class="text-yellow-400 mb-4">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                </div>
+                <p class="text-gray-600 italic">
+                    "I applied for 3 positions and got interviews for all! The platform is user-friendly and the notifications kept me updated."
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Final Call To Action Section -->
+<section class="gradient-bg relative overflow-hidden py-24">
+    <!-- Animated Background Elements -->
+    <div class="absolute inset-0 opacity-20">
+        <div class="absolute -top-40 -left-40 w-96 h-96 bg-white rounded-full mix-blend-overlay animate-float blur-3xl"></div>
+        <div class="absolute -bottom-40 -right-40 w-96 h-96 bg-cyan-300 rounded-full mix-blend-overlay animate-float blur-3xl" style="animation-delay: 1.5s;"></div>
+    </div>
+
+    <div class="container mx-auto px-4 relative z-10">
+        <div class="max-w-4xl mx-auto text-center">
+            <!-- Prestige Badge -->
+            <div class="inline-block bg-white/20 backdrop-blur-lg px-6 py-3 rounded-full text-white font-semibold mb-8 border border-white/30 animate-slideInDown">
+                <i class="fas fa-star mr-2 text-yellow-300"></i>Join Thousands of Successful Professionals
+            </div>
+            
+            <!-- Main CTA Heading -->
+            <h2 class="text-6xl md:text-7xl font-black text-white mb-8 leading-tight animate-fadeInUp">
+                Ready to Build Your <br/>
+                <span class="bg-gradient-to-r from-cyan-300 via-blue-300 to-purple-300 bg-clip-text text-transparent">Government Career?</span>
+            </h2>
+            
+            <!-- Compelling Description -->
+            <p class="text-xl text-blue-100 mb-12 max-w-2xl mx-auto font-light leading-relaxed animate-fadeInUp" style="animation-delay: 0.1s;">
+                Join a thriving community of professionals making a real difference in their municipalities. 
+                Fair hiring, transparent processes, and meaningful work await you.
+            </p>
+
+            {{#unless user}}
+            <!-- Dual CTA Buttons for Non-Logged-In Users -->
+            <div class="flex flex-col sm:flex-row gap-5 justify-center items-center mb-8 animate-fadeInUp" style="animation-delay: 0.2s;">
+                <a href="/auth/register" class="group bg-white text-blue-600 px-12 py-6 rounded-2xl font-bold text-lg hover:bg-gray-100 transition-all shadow-2xl hover:shadow-3xl transform hover:scale-105 inline-flex items-center gap-3 duration-200">
+                    <i class="fas fa-user-plus text-2xl"></i>
+                    <span>Create Free Account</span>
+                    <i class="fas fa-arrow-right group-hover:translate-x-2 transition-transform text-2xl"></i>
+                </a>
+                
+                <a href="/jobs" class="bg-blue-700 hover:bg-blue-800 text-white px-12 py-6 rounded-2xl font-bold text-lg transition-all border-2 border-white shadow-2xl transform hover:scale-105 active:scale-95 inline-flex items-center gap-3 duration-200">
+                    <i class="fas fa-briefcase text-2xl"></i>
+                    <span>Explore All Jobs</span>
+                    <i class="fas fa-arrow-right text-2xl"></i>
+                </a>
+            </div>
+
+            <!-- Trust Indicators -->
+            <p class="text-sm text-gray-200 font-semibold animate-fadeInUp" style="animation-delay: 0.3s;">
+                <i class="fas fa-check-circle text-green-300 mr-2"></i>Free to join • Zero hidden fees • Instant access • Secure & verified
+            </p>
+            {{/unless}}
+            
+            {{#if user}}
+            <!-- Logged-In CTA Buttons -->
+            <div class="flex flex-col sm:flex-row gap-5 justify-center items-center mb-8 animate-fadeInUp">
+                <a href="/applicant/dashboard" class="bg-white text-blue-600 px-12 py-6 rounded-2xl font-bold text-lg hover:bg-gray-100 transition-all shadow-2xl hover:shadow-3xl transform hover:scale-105 inline-flex items-center gap-3 duration-200">
+                    <i class="fas fa-tachometer-alt text-2xl"></i>
+                    <span>Go to Dashboard</span>
+                </a>
+                
+                <a href="/jobs" class="bg-blue-700 hover:bg-blue-800 text-white px-12 py-6 rounded-2xl font-bold text-lg transition-all border-2 border-white shadow-2xl transform hover:scale-105 inline-flex items-center gap-3 duration-200">
+                    <i class="fas fa-briefcase text-2xl"></i>
+                    <span>Browse More Jobs</span>
+                    <i class="fas fa-arrow-right text-2xl"></i>
+                </a>
+            </div>
+            {{/if}}
+        </div>
+    </div>
+</section>
+
+<!-- FAQ Section -->
+<section class="py-20 bg-white">
+    <div class="container mx-auto px-4">
+        <div class="max-w-3xl mx-auto">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-bold text-gray-800 mb-3">
+                    <i class="fas fa-question-circle text-purple-600 mr-2"></i>
+                    Frequently Asked Questions
+                </h2>
+                <p class="text-gray-600 text-lg">Everything you need to know about applying</p>
+            </div>
+
+            <div class="space-y-4">
+                <!-- FAQ Item 1 -->
+                <div class="bg-gray-50 rounded-2xl p-6 hover:bg-purple-50 transition cursor-pointer" onclick="toggleFAQ(1)">
+                    <div class="flex justify-between items-center">
+                        <h3 class="font-bold text-lg text-gray-800">How do I apply for a job?</h3>
+                        <i class="fas fa-chevron-down text-purple-600 transition-transform" id="faq-icon-1"></i>
+                    </div>
+                    <div class="hidden mt-4 text-gray-600" id="faq-answer-1">
+                        Simply create an account, browse available positions, and click "Apply Now" on any job that interests you. Fill out the application form and upload required documents.
+                    </div>
+                </div>
+
+                <!-- FAQ Item 2 -->
+                <div class="bg-gray-50 rounded-2xl p-6 hover:bg-purple-50 transition cursor-pointer" onclick="toggleFAQ(2)">
+                    <div class="flex justify-between items-center">
+                        <h3 class="font-bold text-lg text-gray-800">What documents do I need?</h3>
+                        <i class="fas fa-chevron-down text-purple-600 transition-transform" id="faq-icon-2"></i>
+                    </div>
+                    <div class="hidden mt-4 text-gray-600" id="faq-answer-2">
+                        Typically, you'll need your resume, valid ID, educational certificates, and any relevant certifications. Specific requirements are listed on each job posting.
+                    </div>
+                </div>
+
+                <!-- FAQ Item 3 -->
+                <div class="bg-gray-50 rounded-2xl p-6 hover:bg-purple-50 transition cursor-pointer" onclick="toggleFAQ(3)">
+                    <div class="flex justify-between items-center">
+                        <h3 class="font-bold text-lg text-gray-800">How long does the hiring process take?</h3>
+                        <i class="fas fa-chevron-down text-purple-600 transition-transform" id="faq-icon-3"></i>
+                    </div>
+                    <div class="hidden mt-4 text-gray-600" id="faq-answer-3">
+                        The process varies by position, but typically takes 2-4 weeks from application to final decision. You'll receive updates at each stage through your dashboard and email.
+                    </div>
+                </div>
+
+                <!-- FAQ Item 4 -->
+                <div class="bg-gray-50 rounded-2xl p-6 hover:bg-purple-50 transition cursor-pointer" onclick="toggleFAQ(4)">
+                    <div class="flex justify-between items-center">
+                        <h3 class="font-bold text-lg text-gray-800">Can I apply to multiple positions?</h3>
+                        <i class="fas fa-chevron-down text-purple-600 transition-transform" id="faq-icon-4"></i>
+                    </div>
+                    <div class="hidden mt-4 text-gray-600" id="faq-answer-4">
+                        Yes! You can apply to as many positions as you qualify for. Your profile information will be automatically filled, making it quick and easy.
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-10">
+                <p class="text-gray-600 mb-4">Still have questions?</p>
+                <a href="/contact" class="inline-block bg-purple-600 hover:bg-purple-700 text-white px-8 py-3 rounded-xl font-bold transition">
+                    <i class="fas fa-envelope mr-2"></i>Contact Support
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+{{> footer}}
+
+<!-- JavaScript -->
+<script>
+    // Toggle Save Job
+    async function toggleSaveJob(jobId, button) {
+        try {
+            const response = await fetch(`/applicant/save-job/${jobId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                const icon = button.querySelector('i');
+                if (data.saved) {
+                    icon.classList.remove('far');
+                    icon.classList.add('fas');
+                    icon.style.color = '#ef4444';
+                } else {
+                    icon.classList.remove('fas');
+                    icon.classList.add('far');
+                    icon.style.color = '';
+                }
+                
+                // Show toast notification
+                showToast(data.message, 'success');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            showToast('Failed to save job', 'error');
+        }
+    }
+
+    // Toggle FAQ
+    function toggleFAQ(id) {
+        const answer = document.getElementById(`faq-answer-${id}`);
+        const icon = document.getElementById(`faq-icon-${id}`);
+        
+        answer.classList.toggle('hidden');
+        icon.classList.toggle('rotate-180');
+    }
+
+    // Toast Notification
+    function showToast(message, type = 'info') {
+        const toast = document.createElement('div');
+        toast.className = `fixed bottom-4 right-4 px-6 py-4 rounded-xl shadow-2xl text-white font-semibold animate-fadeInUp z-50 ${
+            type === 'success' ? 'bg-green-500' : 
+            type === 'error' ? 'bg-red-500' : 
+            'bg-blue-500'
+        }`;
+        toast.innerHTML = `
+            <div class="flex items-center gap-3">
+                <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'} text-xl"></i>
+                <span>${message}</span>
+            </div>
+        `;
+        document.body.appendChild(toast);
+        
+        setTimeout(() => {
+            toast.remove();
+        }, 3000);
+    }
+
+    // Smooth Scroll
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        });
+    });
+
+    // Animate on Scroll
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+            }
+        });
+    }, observerOptions);
+
+    document.querySelectorAll('.animate-fadeInUp').forEach(el => {
+        observer.observe(el);
+    });
+
+    // Back to Top Button
+    const backToTop = document.createElement('button');
+    backToTop.innerHTML = '<i class="fas fa-arrow-up"></i>';
+    backToTop.className = 'fixed bottom-8 right-8 w-14 h-14 bg-purple-600 hover:bg-purple-700 text-white rounded-full shadow-2xl hidden items-center justify-center transition-all hover:scale-110 z-50';
+    backToTop.onclick = () => window.scrollTo({ top: 0, behavior: 'smooth' });
+    document.body.appendChild(backToTop);
+
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 500) {
+            backToTop.classList.remove('hidden');
+            backToTop.classList.add('flex');
+        } else {
+            backToTop.classList.add('hidden');
+            backToTop.classList.remove('flex');
+        }
+    });
+
+    // Counter Animation
+    function animateCounter(element, target, duration = 2000) {
+        const start = 0;
+        const increment = target / (duration / 16);
+        let current = start;
+
+        const timer = setInterval(() => {
+            current += increment;
+            if (current >= target) {
+                element.textContent = target;
+                clearInterval(timer);
+            } else {
+                element.textContent = Math.floor(current);
+            }
+        }, 16);
+    }
+
+    // Initialize counters when visible
+    const counters = document.querySelectorAll('.stat-number');
+    const counterObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting && !entry.target.dataset.counted) {
+                const target = parseInt(entry.target.textContent);
+                animateCounter(entry.target, target);
+                entry.target.dataset.counted = 'true';
+            }
+        });
+    });
+
+    counters.forEach(counter => counterObserver.observe(counter));
+</script>

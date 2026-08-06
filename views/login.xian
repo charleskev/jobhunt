@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Municipal Job Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #0ea5e9 0%, #1e3a8a 100%);
+        }
+        .form-panel {
+            background: rgba(255, 255, 255, 0.98);
+            border: 1px solid rgba(148, 163, 184, 0.25);
+            border-radius: 2rem;
+            box-shadow: 0 35px 80px rgba(15, 23, 42, 0.12);
+            padding: 2.5rem;
+        }
+        .form-field {
+            border-radius: 1rem;
+            border: 1px solid #cbd5e1;
+            background: #f8fafc;
+        }
+        .form-field:focus {
+            border-color: #0ea5e9;
+            box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.12);
+        }
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-18px); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+
+    <div class="min-h-screen flex">
+        <!-- Left Side - Image/Branding -->
+        <div class="hidden lg:flex lg:w-1/2 gradient-bg items-center justify-center p-12">
+            <div class="text-white text-center">
+                <div class="animate-float mb-8">
+                    <i class="fas fa-briefcase text-9xl"></i>
+                </div>
+                <h1 class="text-5xl font-bold mb-4">Welcome Back!</h1>
+                <p class="text-xl text-gray-100 mb-8">
+                    Access your municipal job portal account
+                </p>
+                <div class="flex justify-center gap-8 text-sm">
+                    <div class="text-center">
+                        <div class="text-3xl font-bold">500+</div>
+                        <div class="text-gray-200">Active Jobs</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-3xl font-bold">2,000+</div>
+                        <div class="text-gray-200">Applicants</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-3xl font-bold">95%</div>
+                        <div class="text-gray-200">Success Rate</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Side - Login Form -->
+        <div class="w-full lg:w-1/2 flex items-center justify-center p-8">
+            <div class="w-full max-w-md form-panel">
+                <!-- Logo/Header -->
+                <div class="text-center mb-8">
+                    <a href="/" class="inline-block">
+                        <div class="bg-sky-600 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-sky-500/20">
+                            <i class="fas fa-city text-3xl text-white"></i>
+                        </div>
+                    </a>
+                    <h2 class="text-3xl font-bold text-slate-900">Sign In</h2>
+                    <p class="text-slate-600 mt-2">Enter your credentials to access your municipal career dashboard</p>
+                </div>
+
+                <!-- Error Message -->
+                {{#if error}}
+                <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6 rounded">
+                    <div class="flex items-center">
+                        <i class="fas fa-exclamation-circle text-red-500 mr-3"></i>
+                        <p class="text-red-700">{{error}}</p>
+                    </div>
+                </div>
+                {{/if}}
+
+                <!-- Login Form -->
+                <form action="/auth/login" method="POST" class="space-y-6">
+                    <!-- Email -->
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">
+                            <i class="fas fa-envelope mr-2 text-gray-400"></i>Email Address
+                        </label>
+                        <input 
+                            type="email" 
+                            name="email" 
+                            required
+                            class="w-full px-4 py-3 form-field focus:outline-none transition"
+                            placeholder="your.email@example.com"
+                        >
+                    </div>
+
+                    <!-- Password -->
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">
+                            <i class="fas fa-lock mr-2 text-gray-400"></i>Password
+                        </label>
+                        <div class="relative">
+                            <input 
+                                type="password" 
+                                name="password" 
+                                id="password"
+                                required
+                                class="w-full px-4 py-3 form-field focus:outline-none transition"
+                                placeholder="Enter your password"
+                            >
+                            <button 
+                                type="button"
+                                onclick="togglePassword()"
+                                class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                            >
+                                <i class="fas fa-eye" id="toggleIcon"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Remember Me & Forgot Password -->
+                    <div class="flex items-center justify-between">
+                        <label class="flex items-center">
+                            <input type="checkbox" name="remember" class="w-4 h-4 text-sky-600 border-gray-300 rounded focus:ring-sky-500">
+                            <span class="ml-2 text-sm text-slate-700">Remember me</span>
+                        </label>
+                        <a href="/forgot-password" class="text-sm text-sky-600 hover:text-sky-700 font-semibold">
+                            Forgot password?
+                        </a>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button 
+                        type="submit" 
+                        class="w-full bg-gradient-to-r from-sky-600 to-blue-700 text-white py-3 rounded-xl font-bold hover:opacity-95 transition duration-300 shadow-xl shadow-sky-500/20 flex items-center justify-center gap-2"
+                    >
+                        <i class="fas fa-sign-in-alt"></i>Sign In
+                    </button>
+                </form>
+
+                <!-- Divider -->
+                <div class="relative my-8">
+                    <div class="absolute inset-0 flex items-center">
+                        <div class="w-full border-t border-gray-300"></div>
+                    </div>
+                    <div class="relative flex justify-center text-sm">
+                        <span class="px-4 bg-gray-50 text-gray-500">Don't have an account?</span>
+                    </div>
+                </div>
+
+                <!-- Register Link -->
+                <div class="text-center">
+                    <a href="/auth/register" class="inline-block w-full border-2 border-sky-600 text-sky-600 py-3 rounded-xl font-bold hover:bg-sky-50 transition shadow-sm">
+                        <i class="fas fa-user-plus mr-2"></i>Create New Account
+                    </a>
+                </div>
+
+                <!-- Back to Home -->
+                <div class="mt-6 text-center">
+                    <a href="/" class="text-sm text-gray-600 hover:text-gray-800">
+                        <i class="fas fa-arrow-left mr-2"></i>Back to Homepage
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Toggle Password Visibility
+        function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            const toggleIcon = document.getElementById('toggleIcon');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleIcon.classList.remove('fa-eye');
+                toggleIcon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                toggleIcon.classList.remove('fa-eye-slash');
+                toggleIcon.classList.add('fa-eye');
+            }
+        }
+
+        // Form Validation
+        function validateLoginForm() {
+            const email = document.querySelector('input[name="email"]').value.trim();
+            const password = document.querySelector('input[name="password"]').value.trim();
+            
+            if (!email) {
+                showError('Email address is required');
+                return false;
+            }
+            if (!isValidEmail(email)) {
+                showError('Please enter a valid email address');
+                return false;
+            }
+            if (!password) {
+                showError('Password is required');
+                return false;
+            }
+            if (password.length < 6) {
+                showError('Password must be at least 6 characters');
+                return false;
+            }
+            return true;
+        }
+
+        // Email Validation
+        function isValidEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+
+        // Show Error Message
+        function showError(message) {
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'bg-red-50 border-l-4 border-red-500 p-4 mb-6 rounded animate-fadeIn';
+            errorDiv.innerHTML = `
+                <div class="flex items-center">
+                    <i class="fas fa-exclamation-circle text-red-500 mr-3"></i>
+                    <p class="text-red-700">${message}</p>
+                </div>
+            `;
+            const form = document.querySelector('form');
+            form.parentElement.insertBefore(errorDiv, form);
+            
+            setTimeout(() => {
+                errorDiv.style.opacity = '0';
+                errorDiv.style.transition = 'opacity 0.3s ease';
+                setTimeout(() => errorDiv.remove(), 300);
+            }, 5000);
+        }
+
+        // Remember Me Functionality
+        function setupRememberMe() {
+            const rememberCheckbox = document.querySelector('input[name="remember"]');
+            const emailInput = document.querySelector('input[name="email"]');
+            
+            // Load saved email if exists
+            const savedEmail = localStorage.getItem('rememberedEmail');
+            if (savedEmail) {
+                emailInput.value = savedEmail;
+                rememberCheckbox.checked = true;
+            }
+            
+            // Save email on form submit
+            document.querySelector('form').addEventListener('submit', function(e) {
+                if (validateLoginForm()) {
+                    if (rememberCheckbox.checked) {
+                        localStorage.setItem('rememberedEmail', emailInput.value);
+                    } else {
+                        localStorage.removeItem('rememberedEmail');
+                    }
+                }
+            });
+        }
+
+        // Real-time Email Validation
+        function setupEmailValidation() {
+            const emailInput = document.querySelector('input[name="email"]');
+            emailInput.addEventListener('blur', function() {
+                if (this.value && !isValidEmail(this.value)) {
+                    this.classList.add('border-red-500');
+                    this.classList.add('focus:ring-red-500');
+                } else {
+                    this.classList.remove('border-red-500');
+                    this.classList.remove('focus:ring-red-500');
+                }
+            });
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            setupRememberMe();
+            setupEmailValidation();
+            
+            // Prevent form submission if validation fails
+            document.querySelector('form').addEventListener('submit', function(e) {
+                if (!validateLoginForm()) {
+                    e.preventDefault();
+                }
+            });
+        });
+
+        // Add animation styles
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(-10px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+            .animate-fadeIn {
+                animation: fadeIn 0.3s ease;
+            }
+            input.border-red-500 {
+                animation: shake 0.3s ease;
+            }
+            @keyframes shake {
+                0%, 100% { transform: translateX(0); }
+                25% { transform: translateX(-5px); }
+                75% { transform: translateX(5px); }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+
+</body>
+</html>

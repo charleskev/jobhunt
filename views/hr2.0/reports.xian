@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {{> head}}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>Department Reports - HuntJob</title>
+    <style>
+        .stat-card { transition: all 0.3s ease; }
+        .stat-card:hover { transform: translateY(-4px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); }
+    </style>
+</head>
+<body class="bg-gray-50" style="padding-top: 60px;">
+    {{> navbar}}
+    
+    <div class="flex h-[calc(100vh-60px)]">
+        {{> sidebar-manager}}
+        
+        <main class="flex-1 overflow-y-auto">
+            <div class="container mx-auto px-4 py-8">
+                <!-- Header -->
+                <div class="mb-8">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h1 class="text-4xl font-black text-gray-900">📊 Department Reports</h1>
+                            <p class="text-gray-600 mt-2">{{department}} - Performance Analytics</p>
+                        </div>
+                        <button onclick="window.print()" class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition flex items-center gap-2">
+                            <i class="fas fa-print"></i> Print Report
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Summary Stats -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <!-- Total Jobs -->
+                    <div class="stat-card bg-white rounded-2xl shadow-lg p-6 border-l-4 border-blue-600">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-500 text-sm font-medium">📌 Total Jobs</p>
+                                <p class="text-3xl font-black text-gray-900 mt-2">{{stats.totalJobs}}</p>
+                            </div>
+                            <div class="w-14 h-14 bg-blue-100 rounded-xl flex items-center justify-center">
+                                <i class="fas fa-briefcase text-2xl text-blue-600"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Total Applications -->
+                    <div class="stat-card bg-white rounded-2xl shadow-lg p-6 border-l-4 border-green-600">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-500 text-sm font-medium">📄 Total Applications</p>
+                                <p class="text-3xl font-black text-gray-900 mt-2">{{stats.totalApplications}}</p>
+                            </div>
+                            <div class="w-14 h-14 bg-green-100 rounded-xl flex items-center justify-center">
+                                <i class="fas fa-file-alt text-2xl text-green-600"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Shortlisted -->
+                    <div class="stat-card bg-white rounded-2xl shadow-lg p-6 border-l-4 border-purple-600">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-500 text-sm font-medium">⭐ Shortlisted</p>
+                                <p class="text-3xl font-black text-gray-900 mt-2">{{stats.shortlistedApps}}</p>
+                            </div>
+                            <div class="w-14 h-14 bg-purple-100 rounded-xl flex items-center justify-center">
+                                <i class="fas fa-star text-2xl text-purple-600"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Hired -->
+                    <div class="stat-card bg-white rounded-2xl shadow-lg p-6 border-l-4 border-orange-600">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-500 text-sm font-medium">🎉 Hired</p>
+                                <p class="text-3xl font-black text-gray-900 mt-2">{{stats.hiredApps}}</p>
+                            </div>
+                            <div class="w-14 h-14 bg-orange-100 rounded-xl flex items-center justify-center">
+                                <i class="fas fa-trophy text-2xl text-orange-600"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Main Reports Grid -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+                    <!-- Application Status Breakdown -->
+                    <div class="lg:col-span-2 bg-white rounded-2xl shadow-lg p-8">
+                        <h2 class="text-2xl font-black text-gray-900 mb-6">Application Status Distribution</h2>
+                        
+                        <div class="space-y-4">
+                            {{#each statusBreakdown}}
+                            <div>
+                                <div class="flex justify-between items-center mb-2">
+                                    <p class="font-semibold text-gray-700">{{this.status}}</p>
+                                    <span class="text-sm font-bold text-gray-900">{{this.count}} ({{this.percentage}}%)</span>
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full h-3">
+                                    {{#if (eq this.status 'Submitted')}}
+                                        <div class="bg-yellow-500 h-3 rounded-full" style="width: {{this.percentage}}%;"></div>
+                                    {{else if (eq this.status 'Under Review')}}
+                                        <div class="bg-blue-500 h-3 rounded-full" style="width: {{this.percentage}}%;"></div>
+                                    {{else if (eq this.status 'Shortlisted')}}
+                                        <div class="bg-purple-500 h-3 rounded-full" style="width: {{this.percentage}}%;"></div>
+                                    {{else if (eq this.status 'Interview')}}
+                                        <div class="bg-orange-500 h-3 rounded-full" style="width: {{this.percentage}}%;"></div>
+                                    {{else if (eq this.status 'Hired')}}
+                                        <div class="bg-green-500 h-3 rounded-full" style="width: {{this.percentage}}%;"></div>
+                                    {{else if (eq this.status 'Rejected')}}
+                                        <div class="bg-red-500 h-3 rounded-full" style="width: {{this.percentage}}%;"></div>
+                                    {{/if}}
+                                </div>
+                            </div>
+                            {{/each}}
+                        </div>
+                    </div>
+
+                    <!-- Job Stats -->
+                    <div class="bg-white rounded-2xl shadow-lg p-8">
+                        <h2 class="text-2xl font-black text-gray-900 mb-6">Job Statistics</h2>
+                        
+                        <div class="space-y-4">
+                            <div class="bg-blue-50 rounded-lg p-4 border-l-4 border-blue-500">
+                                <p class="text-sm text-gray-600 mb-1">Open Jobs</p>
+                                <p class="text-3xl font-black text-blue-600">{{stats.openJobs}}</p>
+                            </div>
+                            
+                            <div class="bg-red-50 rounded-lg p-4 border-l-4 border-red-500">
+                                <p class="text-sm text-gray-600 mb-1">Closed Jobs</p>
+                                <p class="text-3xl font-black text-red-600">{{stats.closedJobs}}</p>
+                            </div>
+
+                            <div class="bg-gray-100 rounded-lg p-4 border-l-4 border-gray-500">
+                                <p class="text-sm text-gray-600 mb-1">Application Rate</p>
+                                {{#if stats.totalJobs}}
+                                    <p class="text-3xl font-black text-gray-900">{{div stats.totalApplications stats.totalJobs}}</p>
+                                    <p class="text-xs text-gray-500 mt-1">per job</p>
+                                {{else}}
+                                    <p class="text-xl text-gray-500">N/A</p>
+                                {{/if}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Top Jobs by Applications -->
+                <div class="bg-white rounded-2xl shadow-lg p-8 mb-8">
+                    <h2 class="text-2xl font-black text-gray-900 mb-6">🏆 Top 5 Jobs by Applications</h2>
+                    
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead>
+                                <tr class="border-b-2 border-gray-200">
+                                    <th class="text-left py-3 px-4 font-semibold text-gray-700">Job Title</th>
+                                    <th class="text-right py-3 px-4 font-semibold text-gray-700">Applications</th>
+                                    <th class="text-right py-3 px-4 font-semibold text-gray-700">Percentage</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#each topJobs}}
+                                <tr class="border-b border-gray-100 hover:bg-gray-50 transition">
+                                    <td class="py-4 px-4">
+                                        <a href="/manager/my-jobs" class="text-blue-600 hover:text-blue-700 font-semibold">{{this.jobTitle}}</a>
+                                    </td>
+                                    <td class="py-4 px-4 text-right">
+                                        <span class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-bold">{{this.count}}</span>
+                                    </td>
+                                    <td class="py-4 px-4 text-right">
+                                        <span class="font-semibold text-gray-900">{{fixed (mul (div this.count ../stats.totalApplications) 100) 1}}%</span>
+                                    </td>
+                                </tr>
+                                {{/each}}
+                                {{#if (eq topJobs.length 0)}}
+                                <tr>
+                                    <td colspan="3" class="py-8 text-center text-gray-500">
+                                        No jobs with applications yet
+                                    </td>
+                                </tr>
+                                {{/if}}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Application Pipeline -->
+                <div class="bg-white rounded-2xl shadow-lg p-8">
+                    <h2 class="text-2xl font-black text-gray-900 mb-6">Application Pipeline Flow</h2>
+                    
+                    <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+                        <!-- Submitted -->
+                        <div class="text-center flex-1">
+                            <div class="bg-yellow-100 rounded-full w-24 h-24 flex items-center justify-center mx-auto mb-3">
+                                <div class="text-center">
+                                    <p class="text-3xl font-black text-yellow-600">{{stats.submittedApps}}</p>
+                                </div>
+                            </div>
+                            <p class="font-semibold text-gray-900">Submitted</p>
+                            <p class="text-xs text-gray-500 mt-1">Starting point</p>
+                        </div>
+
+                        <div class="text-3xl text-gray-300 hidden md:block">→</div>
+
+                        <!-- Under Review -->
+                        <div class="text-center flex-1">
+                            <div class="bg-blue-100 rounded-full w-24 h-24 flex items-center justify-center mx-auto mb-3">
+                                <p class="text-3xl font-black text-blue-600">{{stats.underReviewApps}}</p>
+                            </div>
+                            <p class="font-semibold text-gray-900">Under Review</p>
+                            <p class="text-xs text-gray-500 mt-1">Being screened</p>
+                        </div>
+
+                        <div class="text-3xl text-gray-300 hidden md:block">→</div>
+
+                        <!-- Shortlisted -->
+                        <div class="text-center flex-1">
+                            <div class="bg-purple-100 rounded-full w-24 h-24 flex items-center justify-center mx-auto mb-3">
+                                <p class="text-3xl font-black text-purple-600">{{stats.shortlistedApps}}</p>
+                            </div>
+                            <p class="font-semibold text-gray-900">Shortlisted</p>
+                            <p class="text-xs text-gray-500 mt-1">Qualified</p>
+                        </div>
+
+                        <div class="text-3xl text-gray-300 hidden md:block">→</div>
+
+                        <!-- Interview -->
+                        <div class="text-center flex-1">
+                            <div class="bg-orange-100 rounded-full w-24 h-24 flex items-center justify-center mx-auto mb-3">
+                                <p class="text-3xl font-black text-orange-600">{{stats.interviewApps}}</p>
+                            </div>
+                            <p class="font-semibold text-gray-900">Interview</p>
+                            <p class="text-xs text-gray-500 mt-1">Scheduled</p>
+                        </div>
+
+                        <div class="text-3xl text-gray-300 hidden md:block">→</div>
+
+                        <!-- Hired -->
+                        <div class="text-center flex-1">
+                            <div class="bg-green-100 rounded-full w-24 h-24 flex items-center justify-center mx-auto mb-3">
+                                <p class="text-3xl font-black text-green-600">{{stats.hiredApps}}</p>
+                            </div>
+                            <p class="font-semibold text-gray-900">Hired</p>
+                            <p class="text-xs text-gray-500 mt-1">Successful</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    {{> footer}}
+    
+    <script>
+        // Auto-hide on print
+        window.addEventListener('beforeprint', function() {
+            document.querySelector('nav').style.display = 'none';
+            document.querySelector('[class*="sidebar"]').style.display = 'none';
+        });
+        
+        window.addEventListener('afterprint', function() {
+            document.querySelector('nav').style.display = 'block';
+            document.querySelector('[class*="sidebar"]').style.display = 'block';
+        });
+    </script>
+</body>
+</html>

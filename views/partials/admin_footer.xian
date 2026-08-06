@@ -1,0 +1,13 @@
+</main>
+
+    </div>
+
+    {{> footer}}
+    <script>
+        // small script to ensure content resize when tailwind loads
+        window.addEventListener('load', function() {
+            document.body.style.paddingTop = '64px';
+        });
+    </script>
+</body>
+</html>

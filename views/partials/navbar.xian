@@ -1,0 +1,345 @@
+<nav class="sticky top-0 z-50" style="position: fixed; top: 0; left: 0; right: 0; width: 100%; background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 50%, #0ea5e9 100%); box-shadow: 0 4px 12px rgba(30, 58, 138, 0.2); height: 60px;">
+    <style>
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes pulse-border {
+            0%, 100% { border-color: rgb(37, 99, 235); }
+            50% { border-color: rgb(59, 130, 246); }
+        }
+
+        .nav-animate {
+            animation: slideDown 0.5s ease-out;
+        }
+
+        .nav-link {
+            position: relative;
+            transition: all 0.3s ease;
+            color: #ffffff;
+            font-size: 0.875rem;
+        }
+
+        .nav-link:hover {
+            color: #fbbf24;
+            transform: translateY(-1px);
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(to right, #fbbf24, #fcd34d);
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .btn-login {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            font-size: 0.875rem;
+        }
+
+        .btn-login::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn-login:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-register {
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(251, 191, 36, 0.3);
+            font-size: 0.875rem;
+        }
+
+        .btn-register:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(251, 191, 36, 0.4);
+        }
+
+        .btn-register::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.2);
+            transition: left 0.5s ease;
+            z-index: -1;
+        }
+
+        .btn-register:hover::after {
+            left: 100%;
+        }
+
+        .logo-animate {
+            transition: all 0.3s ease;
+        }
+
+        .logo-animate:hover {
+            transform: scale(1.05) rotate(5deg);
+        }
+
+        .mobile-menu-animate {
+            animation: slideDown 0.3s ease-out;
+        }
+
+        .dropdown-item {
+            transition: all 0.2s ease;
+        }
+
+        .dropdown-item:hover {
+            transform: translateX(4px);
+        }
+
+        /* Tooltip Styles */
+        .tooltip-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .tooltip-text {
+            visibility: hidden;
+            width: 120px;
+            background-color: rgb(31, 41, 55);
+            color: white;
+            text-align: center;
+            border-radius: 6px;
+            padding: 8px 12px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -60px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            font-size: 12px;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            white-space: nowrap;
+        }
+
+        .tooltip-text::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: rgb(31, 41, 55) transparent transparent transparent;
+        }
+
+        .tooltip-container:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /* Tool Icon Animation */
+        .tool-icon {
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            display: inline-block;
+        }
+
+        .tooltip-container:hover .tool-icon {
+            transform: rotate(15deg) scale(1.2);
+            color: #fbbf24;
+        }
+
+        .nav-link .tool-icon {
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover .tool-icon {
+            animation: toolBounce 0.6s ease-in-out;
+        }
+
+        @keyframes toolBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-4px); }
+        }
+    </style>
+
+    <div class="container mx-auto px-4">
+        <div class="flex items-center justify-between h-14">
+            <!-- Logo with Animation -->
+            <a href="/" class="flex items-center gap-3 logo-animate">
+                <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-sky-500 via-blue-600 to-violet-600 flex items-center justify-center shadow-xl text-white font-black text-lg">
+                    M
+                </div>
+                <div>
+                    <div class="text-sm font-bold text-white tracking-[0.06em]">Municipal Jobs</div>
+                    <div class="text-xs text-sky-200 hidden sm:block">Municipal Career Portal</div>
+                </div>
+            </a>
+
+            <!-- Desktop Menu -->
+            <div class="hidden md:flex items-center space-x-4">
+                {{#if user}}
+                    <!-- Logged-in user navigation -->
+                    <a href="/applicant/dashboard" class="nav-link font-semibold">
+                        <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
+                    </a>
+                    <a href="/jobs" class="nav-link font-semibold">
+                        <i class="fas fa-briefcase mr-2"></i>Browse Jobs
+                    </a>
+                    <a href="/applicant/saved-jobs" class="nav-link font-semibold">
+                        <i class="fas fa-heart mr-2 text-red-500"></i>Saved Jobs
+                    </a>
+                {{else}}
+                    <!-- Guest navigation -->
+                    <a href="/" class="nav-link font-semibold">
+                        <i class="fas fa-home mr-2 tool-icon"></i>Home
+                    </a>
+                    <a href="/jobs" class="nav-link font-semibold">
+                        <i class="fas fa-briefcase mr-2 tool-icon"></i>Browse Jobs
+                    </a>
+                    <div class="tooltip-container">
+                        <a href="/about" class="nav-link font-semibold inline-flex items-center">
+                            <i class="fas fa-info-circle mr-2 tool-icon"></i>About
+                        </a>
+                        <span class="tooltip-text">Learn About Us</span>
+                    </div>
+                    <div class="tooltip-container">
+                        <a href="/contact" class="nav-link font-semibold inline-flex items-center">
+                            <i class="fas fa-envelope mr-2 tool-icon"></i>Contact
+                        </a>
+                        <span class="tooltip-text">Get In Touch</span>
+                    </div>
+                {{/if}}
+            </div>
+
+            <!-- Auth Buttons -->
+            <div class="hidden md:flex items-center space-x-2">
+                {{#if user}}
+                    <!-- User Dropdown with Animation -->
+                    <div class="relative" x-data="{ open: false }">
+                        <button @click="open = !open" class="flex items-center space-x-1 bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-lg transition duration-300 transform hover:scale-105 text-white text-sm">
+                            <div class="w-7 h-7 bg-gradient-to-br from-yellow-400 to-orange-400 rounded-full flex items-center justify-center text-blue-900 font-bold text-xs shadow-md">
+                                {{user.firstName}}
+                            </div>
+                            <span class="font-semibold text-white text-xs hidden sm:inline">{{user.firstName}}</span>
+                            <i class="fas fa-chevron-down text-yellow-200 text-xs transition duration-300" :class="{ 'rotate-180': open }"></i>
+                        </button>
+                        
+                        <div x-show="open" @click.away="open = false" x-transition class="absolute right-0 mt-1 w-40 bg-white rounded-lg shadow-xl py-1 border border-blue-100 mobile-menu-animate">
+                            <a href="/applicant/dashboard" class="block px-3 py-2 text-gray-700 hover:bg-blue-50 transition text-xs dropdown-item">
+                                <i class="fas fa-tachometer-alt mr-2 text-blue-600"></i>Dashboard
+                            </a>
+                            <a href="/applicant/my-applications" class="block px-3 py-2 text-gray-700 hover:bg-blue-50 transition text-xs dropdown-item">
+                                <i class="fas fa-file-alt mr-2 text-blue-600"></i>Applications
+                            </a>
+                            <a href="/applicant/profile" class="block px-3 py-2 text-gray-700 hover:bg-blue-50 transition text-xs dropdown-item">
+                                <i class="fas fa-user mr-2 text-blue-600"></i>Profile
+                            </a>
+                            <hr class="my-1">
+                            <a href="/auth/logout" class="block px-3 py-2 text-red-600 hover:bg-red-50 transition text-xs dropdown-item">
+                                <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                            </a>
+                        </div>
+                    </div>
+                {{else}}
+                    <a href="/auth/login" class="btn-login text-white hover:text-yellow-300 font-semibold transition px-3 py-1.5 rounded-lg relative z-10 text-sm">
+                        <i class="fas fa-sign-in-alt mr-1"></i>Login
+                    </a>
+                    <a href="/auth/register" class="btn-register bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-blue-900 px-4 py-1.5 rounded-lg font-bold transition text-xs shadow-lg">
+                        <i class="fas fa-user-plus mr-1"></i>Register
+                    </a>
+                {{/if}}
+            </div>
+
+            <!-- Mobile Menu Button -->
+            <button class="md:hidden text-white hover:text-yellow-300 transition transform hover:scale-110" onclick="toggleMobileMenu()">
+                <i class="fas fa-bars text-lg"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Mobile Menu with Animation -->
+    <div id="mobileMenu" class="hidden md:hidden bg-blue-700 border-t border-yellow-400 mobile-menu-animate">
+        <div class="px-3 py-2 space-y-1">
+            {{#if user}}
+                <!-- Logged-in user mobile navigation -->
+                <a href="/applicant/dashboard" class="block py-2 text-white hover:text-yellow-300 font-semibold hover:bg-blue-600 px-2 rounded text-xs transition dropdown-item">
+                    <i class="fas fa-tachometer-alt mr-2 text-yellow-300"></i>Dashboard
+                </a>
+                <a href="/jobs" class="block py-2 text-white hover:text-yellow-300 font-semibold hover:bg-blue-600 px-2 rounded text-xs transition dropdown-item">
+                    <i class="fas fa-briefcase mr-2 text-yellow-300"></i>Browse
+                </a>
+                <a href="/applicant/saved-jobs" class="block py-2 text-white hover:text-yellow-300 font-semibold hover:bg-blue-600 px-2 rounded text-xs transition dropdown-item">
+                    <i class="fas fa-heart mr-2 text-red-300"></i>Saved
+                </a>
+                <hr class="my-1 border-blue-600">
+                <a href="/applicant/profile" class="block py-2 text-white hover:text-yellow-300 font-semibold hover:bg-blue-600 px-2 rounded text-xs transition dropdown-item">
+                    <i class="fas fa-user mr-2 text-yellow-300"></i>Profile
+                </a>
+                <a href="/auth/logout" class="block py-2 text-red-200 hover:text-red-100 font-semibold hover:bg-red-700 px-2 rounded text-xs transition">
+                    <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                </a>
+            {{else}}
+                <!-- Guest mobile navigation -->
+                <a href="/" class="block py-2 text-white hover:text-yellow-300 font-semibold hover:bg-blue-600 px-2 rounded text-xs transition dropdown-item">
+                    <i class="fas fa-home mr-2 text-yellow-300 tool-icon"></i>Home
+                </a>
+                <a href="/jobs" class="block py-2 text-white hover:text-yellow-300 font-semibold hover:bg-blue-600 px-2 rounded text-xs transition dropdown-item">
+                    <i class="fas fa-briefcase mr-2 text-yellow-300 tool-icon"></i>Browse
+                </a>
+                <a href="/about" class="block py-2 text-white hover:text-yellow-300 font-semibold hover:bg-blue-600 px-2 rounded text-xs transition dropdown-item">
+                    <i class="fas fa-info-circle mr-2 text-yellow-300 tool-icon"></i>About
+                </a>
+                <a href="/contact" class="block py-2 text-white hover:text-yellow-300 font-semibold hover:bg-blue-600 px-2 rounded text-xs transition dropdown-item">
+                    <i class="fas fa-envelope mr-2 text-yellow-300 tool-icon"></i>Contact
+                </a>
+                <hr class="my-1 border-blue-600">
+                <a href="/auth/login" class="block py-2 text-yellow-300 hover:text-yellow-200 font-semibold hover:bg-blue-600 px-2 rounded text-xs transition">
+                    <i class="fas fa-sign-in-alt mr-2"></i>Login
+                </a>
+                <a href="/auth/register" class="block py-2 bg-gradient-to-r from-yellow-400 to-yellow-500 text-blue-900 font-bold hover:from-yellow-500 hover:to-yellow-600 px-2 rounded text-xs transition transform hover:scale-105">
+                    <i class="fas fa-user-plus mr-1"></i>Register
+                </a>
+            {{/if}}
+        </div>
+    </div>
+</nav>
+
+<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+<script>
+    function toggleMobileMenu() {
+        const menu = document.getElementById('mobileMenu');
+        menu.classList.toggle('hidden');
+    }
+</script>

@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {{> head}}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>Apply for Job - HuntJob</title>
+    <style>
+        .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .form-input { 
+            transition: all 0.3s ease;
+        }
+        .form-input:focus {
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+<div class="flex h-screen">
+    {{> sidebar-applicant}}
+    <div class="flex-1 overflow-y-auto">
+        <!-- Gradient Header -->
+        <div class="gradient-bg text-white py-8 px-4">
+            <div class="max-w-4xl mx-auto">
+                <h1 class="text-4xl font-black mb-1">Apply for Position</h1>
+                <p class="text-purple-100">Submit your application below</p>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="max-w-4xl mx-auto px-4 py-8">
+            <!-- Job Summary Card -->
+            <div class="bg-white rounded-2xl shadow-lg p-8 mb-8 border-l-4 border-purple-600">
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <h2 class="text-3xl font-bold text-gray-900 mb-1">{{job.title}}</h2>
+                        <p class="text-gray-600 flex items-center">
+                            <i class="fas fa-building mr-2"></i>
+                            {{#if job.poster}}
+                            {{job.poster.firstName}} {{job.poster.lastName}}
+                            {{else}}
+                            {{job.employer.firstName}} {{job.employer.lastName}}
+                            {{/if}}
+                        </p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div class="bg-gray-50 rounded-lg p-4">
+                        <p class="text-sm text-gray-600 font-medium mb-1"><i class="fas fa-map-marker-alt mr-2"></i>Location</p>
+                        <p class="font-bold text-gray-900">{{job.location}}</p>
+                    </div>
+                    <div class="bg-gray-50 rounded-lg p-4">
+                        <p class="text-sm text-gray-600 font-medium mb-1"><i class="fas fa-briefcase mr-2"></i>Employment Type</p>
+                        <p class="font-bold text-gray-900">{{job.employmentType}}</p>
+                    </div>
+                    <div class="bg-gray-50 rounded-lg p-4">
+                        <p class="text-sm text-gray-600 font-medium mb-1"><i class="fas fa-chart-line mr-2"></i>Experience</p>
+                        <p class="font-bold text-gray-900">{{job.experience}}</p>
+                    </div>
+                    <div class="bg-purple-50 rounded-lg p-4">
+                        <p class="text-sm text-gray-600 font-medium mb-1"><i class="fas fa-money-bill-alt mr-2"></i>Salary</p>
+                        <p class="font-bold text-purple-600">{{job.salaryRange}}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Error Alert -->
+            <div id="errorAlert" class="hidden mb-8 bg-red-50 border-l-4 border-red-500 rounded-lg p-4">
+                <div class="flex items-center">
+                    <i class="fas fa-exclamation-circle text-red-500 mr-3 text-xl"></i>
+                    <div>
+                        <p class="font-bold text-red-800">Error</p>
+                        <p id="errorMessage" class="text-red-700"></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Success Alert -->
+            <div id="successAlert" class="hidden mb-8 bg-gradient-to-r from-green-50 to-emerald-50 border-l-4 border-green-500 rounded-lg p-6 shadow-lg animate-pulse">
+                <div class="flex items-start gap-4">
+                    <div class="text-3xl">
+                        <i class="fas fa-check-circle text-green-500"></i>
+                    </div>
+                    <div class="flex-1">
+                        <p class="font-bold text-green-800 text-lg">Success! 🎉</p>
+                        <p class="text-green-700 mt-1">Your application has been submitted successfully.</p>
+                        <p class="text-sm text-green-600 mt-2"><i class="fas fa-info-circle mr-1"></i>Redirecting to your applications in a moment...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Application Form -->
+            <form id="applicationForm" enctype="multipart/form-data" class="bg-white rounded-2xl shadow-lg p-8">
+                <input type="hidden" name="jobId" value="{{job.id}}">
+
+                <!-- Document Uploads (per-job required documents) -->
+                <div class="mb-8">
+                    <label class="block text-sm font-bold text-gray-900 mb-3">
+                        <i class="fas fa-file-upload mr-2 text-purple-600"></i>Required Documents
+                    </label>
+                    {{#if requiredDocuments}}
+                    <div class="space-y-4">
+                        {{#each requiredDocuments}}
+                        <div class="border border-gray-200 rounded-xl p-4 bg-white">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">{{this}}</label>
+                            <input type="file" data-label="{{this}}" id="docInput{{@index}}" class="doc-input w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none" />
+                        </div>
+                        {{/each}}
+                    </div>
+                    {{else}}
+                    <div class="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center hover:border-purple-500 hover:bg-purple-50 transition cursor-pointer">
+                        <input type="file" data-label="Resume" class="doc-input hidden" id="resumeInput">
+                        <label for="resumeInput" class="cursor-pointer block">
+                            <i class="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-3"></i>
+                            <p class="font-semibold text-gray-900 mb-1">Upload your resume</p>
+                            <p class="text-sm text-gray-600">PDF, DOC, or DOCX (Max 10MB)</p>
+                        </label>
+                    </div>
+                    {{/if}}
+                    <p class="text-sm text-gray-600 mt-2"><i class="fas fa-info-circle mr-1"></i>Please upload all required documents.</p>
+                </div>
+
+                <!-- Cover Letter -->
+                <div class="mb-8">
+                    <label class="block text-sm font-bold text-gray-900 mb-3">
+                        <i class="fas fa-pen-fancy mr-2 text-purple-600"></i>Cover Letter
+                    </label>
+                    <textarea 
+                        name="coverLetter" 
+                        rows="8" 
+                        placeholder="Tell us why you're interested in this position and why you're a great fit..." 
+                        class="form-input w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    ></textarea>
+                    <p class="text-sm text-gray-600 mt-2">
+                        <i class="fas fa-lightbulb mr-1"></i>Optional but recommended
+                    </p>
+                </div>
+
+                <!-- Additional Information -->
+                <div class="mb-8">
+                    <label class="block text-sm font-bold text-gray-900 mb-3">
+                        <i class="fas fa-comment-dots mr-2 text-purple-600"></i>Additional Information
+                    </label>
+                    <textarea 
+                        name="additionalInfo" 
+                        rows="5" 
+                        placeholder="Anything else you'd like us to know about you..." 
+                        class="form-input w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    ></textarea>
+                </div>
+
+                <!-- Consent Checkbox -->
+                <div class="mb-8 bg-gray-50 rounded-xl p-4">
+                    <div class="flex items-start">
+                        <input type="checkbox" id="consent" required class="mt-1 mr-3 w-5 h-5 text-purple-600 rounded">
+                        <label for="consent" class="text-sm text-gray-700">
+                            I confirm that the information provided is accurate and complete. I understand this application will be reviewed by the hiring team.
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <button type="submit" id="submitBtn" class="flex-1 px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-xl font-bold transition flex items-center justify-center">
+                        <i class="fas fa-paper-plane mr-2"></i>Submit Application
+                    </button>
+                    <a href="/jobs/{{job.id}}" class="flex-1 text-center px-6 py-3 bg-gray-200 hover:bg-gray-300 text-gray-900 rounded-xl font-bold transition">
+                        <i class="fas fa-times mr-2"></i>Cancel
+                    </a>
+                </div>
+            </form>
+
+            <!-- Help Section -->
+            <div class="mt-8 bg-blue-50 border-l-4 border-blue-600 rounded-lg p-6">
+                <h3 class="font-bold text-gray-900 mb-2">
+                    <i class="fas fa-info-circle mr-2 text-blue-600"></i>Application Tips
+                </h3>
+                <ul class="text-sm text-gray-700 space-y-1">
+                    <li><strong>Cover Letter:</strong> Make it personal and show why you're passionate about this role</li>
+                    <li><strong>Resume:</strong> Ensure it's up-to-date and clearly formatted</li>
+                    <li><strong>Accuracy:</strong> Double-check all information before submitting</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{> footer}}
+    <script>
+        // Set dynamic file input names based on data-label so server receives meaningful fieldnames
+        function slugify(str) {
+            return String(str)
+                .toLowerCase()
+                .trim()
+                .replace(/[^a-z0-9]+/g, '_')
+                .replace(/^_|_$/g, '');
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.doc-input').forEach(function (input, idx) {
+                const label = input.dataset.label || `document_${idx}`;
+                const fieldName = 'doc_' + slugify(label);
+                input.name = fieldName;
+
+                // Add filename preview
+                const preview = document.createElement('div');
+                preview.className = 'text-sm text-gray-600 mt-2 file-name';
+                input.parentNode.appendChild(preview);
+
+                input.addEventListener('change', function (e) {
+                    if (input.files && input.files.length > 0) {
+                        preview.textContent = input.files[0].name;
+                    } else {
+                        preview.textContent = '';
+                    }
+                });
+            });
+
+            // Handle form submission via AJAX
+            const form = document.getElementById('applicationForm');
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+
+                // Hide alerts
+                document.getElementById('errorAlert').classList.add('hidden');
+                document.getElementById('successAlert').classList.add('hidden');
+
+                // Disable submit button
+                const submitBtn = document.getElementById('submitBtn');
+                submitBtn.disabled = true;
+                const originalText = submitBtn.innerHTML;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Submitting...';
+
+                try {
+                    const formData = new FormData(form);
+                    const response = await fetch('/applicant/api/apply', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    const data = await response.json();
+
+                    if (data.success) {
+                        // Show success message
+                        document.getElementById('successAlert').classList.remove('hidden');
+                        document.getElementById('errorAlert').classList.add('hidden');
+                        
+                        // Scroll to success message
+                        document.getElementById('successAlert').scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        
+                        // Reset form
+                        form.reset();
+
+                        // Redirect to applications list after 3 seconds
+                        setTimeout(() => {
+                            window.location.href = '/applicant/my-applications';
+                        }, 3000);
+                    } else {
+                        // Show error message
+                        document.getElementById('errorMessage').textContent = data.message || 'Failed to submit application';
+                        document.getElementById('errorAlert').classList.remove('hidden');
+                        
+                        // Re-enable submit button
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = originalText;
+
+                        // Scroll to error
+                        document.getElementById('errorAlert').scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    document.getElementById('errorMessage').textContent = 'An error occurred while submitting your application';
+                    document.getElementById('errorAlert').classList.remove('hidden');
+                    
+                    // Re-enable submit button
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalText;
+
+                    // Scroll to error
+                    document.getElementById('errorAlert').scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

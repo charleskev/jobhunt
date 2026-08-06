@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {{> head}}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>Applicant Dashboard - HuntJob</title>
+    <style>
+        .gradient-bg { background: linear-gradient(135deg, #0f172a 0%, #1d4ed8 40%, #0ea5e9 100%); }
+        .dashboard-panel { background: rgba(255, 255, 255, 0.95); border: 1px solid rgba(148, 163, 184, 0.22); border-radius: 1.75rem; box-shadow: 0 35px 90px rgba(15, 23, 42, 0.12); }
+        .stat-card { transition: all 0.35s ease; }
+        .stat-card:hover { transform: translateY(-6px); box-shadow: 0 24px 45px rgba(15, 23, 42, 0.12); }
+        .dashboard-hero { border: 1px solid rgba(59, 130, 246, 0.18); }
+        .dashboard-widget { border: 1px solid rgba(148, 163, 184, 0.22); }
+        .dashboard-tip { background: linear-gradient(135deg, #eff6ff 0%, #e0f2fe 100%); }
+        .animate-fadeInUp { opacity: 0; transform: translateY(20px); animation: fadeInUp 0.65s ease-out forwards; }
+        @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="bg-gray-50">
+    {{> navbar}}
+    
+    <div class="flex min-h-screen">
+        {{> sidebar-applicant}}
+        
+        <main class="flex-1 overflow-y-auto pt-24">
+            <div class="container mx-auto px-4 py-4 lg:py-8">
+                <!-- Welcome Section -->
+                <div class="gradient-bg rounded-[2rem] text-white p-10 mb-8 shadow-2xl dashboard-hero">
+                    <div class="flex flex-col lg:flex-row lg:items-start justify-between gap-6">
+                        <div>
+                            <h1 class="text-5xl font-black mb-2">Welcome back, {{user.firstName}} {{user.lastName}}! 👋</h1>
+                            <p class="text-lg text-purple-100">Track your applications and find your next opportunity</p>
+                        </div>
+                        <div class="text-7xl opacity-20">🎯</div>
+                    </div>
+                </div>
+
+                <!-- Stats Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
+                    <div class="stat-card dashboard-panel p-8 border-l-4 border-blue-600">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-500 text-sm font-medium mb-2">Active Applications</p>
+                                <p class="text-4xl font-black text-gray-900">{{stats.total}}</p>
+                            </div>
+                            <div class="w-16 h-16 bg-blue-100 rounded-2xl flex items-center justify-center">
+                                <i class="fas fa-file-alt text-2xl text-blue-600"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card dashboard-panel p-8 border-l-4 border-sky-600">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-500 text-sm font-medium mb-2">Shortlisted</p>
+                                <p class="text-4xl font-black text-gray-900">{{stats.shortlisted}}</p>
+                            </div>
+                            <div class="w-16 h-16 bg-green-100 rounded-2xl flex items-center justify-center">
+                                <i class="fas fa-heart text-2xl text-green-600"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card dashboard-panel p-8 border-l-4 border-cyan-600">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-500 text-sm font-medium mb-2">Interview</p>
+                                <p class="text-4xl font-black text-gray-900">{{stats.interview}}</p>
+                            </div>
+                            <div class="w-16 h-16 bg-orange-100 rounded-2xl flex items-center justify-center">
+                                <i class="fas fa-calendar-alt text-2xl text-orange-600"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card dashboard-panel p-8 border-l-4 border-indigo-600">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-500 text-sm font-medium mb-2">Hired</p>
+                                <p class="text-4xl font-black text-gray-900">{{stats.hired}}</p>
+                            </div>
+                            <div class="w-16 h-16 bg-purple-100 rounded-2xl flex items-center justify-center">
+                                <i class="fas fa-briefcase text-2xl text-purple-600"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Main Content Grid -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <!-- Recent Applications -->
+                    <div class="lg:col-span-2">
+                        <div class="dashboard-panel overflow-hidden">
+                            <div class="p-8 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                                <div>
+                                    <h2 class="text-2xl font-bold text-gray-900">Recent Applications</h2>
+                                    <p class="text-gray-600 text-sm mt-1">Track your application status</p>
+                                </div>
+                                <a href="/applicant/my-applications" class="text-blue-600 hover:text-blue-700 font-semibold text-sm">View All →</a>
+                            </div>
+
+                            <div class="divide-y divide-gray-100">
+                                {{#if recentApplications}}
+                                    {{#each recentApplications}}
+                                    <div class="p-6 hover:bg-gray-50 transition">
+                                        <div class="flex items-start justify-between mb-3">
+                                            <div>
+                                                <h3 class="font-bold text-gray-900">{{this.job.title}}</h3>
+                                                <p class="text-sm text-gray-600 mt-1">{{this.job.department}}</p>
+                                            </div>
+                                            {{#if (eq this.status 'submitted')}}<span class="px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs font-bold">⏳ Submitted</span>{{/if}}
+                                            {{#if (eq this.status 'under_review')}}<span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-bold">🔍 Under Review</span>{{/if}}
+                                            {{#if (eq this.status 'shortlisted')}}<span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-xs font-bold">⭐ Shortlisted</span>{{/if}}
+                                            {{#if (eq this.status 'interview')}}<span class="px-3 py-1 bg-orange-100 text-orange-800 rounded-full text-xs font-bold">🎤 Interview</span>{{/if}}
+                                            {{#if (eq this.status 'hired')}}<span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-xs font-bold">✓ Hired</span>{{/if}}
+                                            {{#if (eq this.status 'rejected')}}<span class="px-3 py-1 bg-red-100 text-red-800 rounded-full text-xs font-bold">✗ Rejected</span>{{/if}}
+                                        </div>
+                                        <div class="flex items-center justify-between">
+                                            <p class="text-xs text-gray-500">Applied {{formatDate this.createdAt}}</p>
+                                            <a href="/applicant/my-applications" class="text-blue-600 hover:text-blue-700 font-semibold text-sm">View Details →</a>
+                                        </div>
+                                    </div>
+                                    {{/each}}
+                                {{else}}
+                                    <div class="p-6 text-center text-gray-500">
+                                        <p>No applications yet. <a href="/jobs" class="text-blue-600 hover:text-blue-700">Browse jobs</a></p>
+                                    </div>
+                                {{/if}}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sidebar Widgets -->
+                    <div class="space-y-6">
+                        <!-- Upcoming Interviews -->
+                        <div class="dashboard-panel p-6">
+                            <h3 class="text-lg font-bold text-slate-900 mb-4">📅 Upcoming Interviews</h3>
+                            <div class="space-y-4">
+                                {{#if recentApplications}}
+                                    {{#each recentApplications}}
+                                        {{#if (eq this.status 'interview')}}
+                                        <div class="p-4 border-l-4 border-blue-600 bg-blue-50 rounded-lg">
+                                            <p class="font-semibold text-gray-900 text-sm">{{this.job.title}}</p>
+                                            <p class="text-xs text-gray-600 mt-1">{{this.job.department}}</p>
+                                            <button onclick="location.href='/applicant/my-applications'" class="text-xs text-blue-600 font-bold mt-2 hover:text-blue-700">View Details →</button>
+                                        </div>
+                                        {{/if}}
+                                    {{/each}}
+                                {{else}}
+                                    <p class="text-sm text-gray-500">No upcoming interviews scheduled</p>
+                                {{/if}}
+                            </div>
+                        </div>
+
+                        <!-- Quick Actions -->
+                        <div class="dashboard-panel p-6">
+                            <h3 class="text-lg font-bold text-slate-900 mb-4">⚡ Quick Actions</h3>
+                            <div class="space-y-3">
+                                <a href="/jobs" class="block w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-xl font-semibold text-center transition">
+                                    <i class="fas fa-search mr-2"></i>Browse Jobs
+                                </a>
+                                <a href="/applicant/profile" class="block w-full bg-slate-50 hover:bg-slate-100 text-slate-900 px-4 py-3 rounded-xl font-semibold text-center transition">
+                                    <i class="fas fa-user mr-2"></i>Update Profile
+                                </a>
+                                <a href="/applicant/saved-jobs" class="block w-full bg-slate-50 hover:bg-slate-100 text-slate-900 px-4 py-3 rounded-xl font-semibold text-center transition">
+                                    <i class="fas fa-heart mr-2"></i>Saved Jobs
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Tips Card -->
+                        <div class="dashboard-panel dashboard-tip p-6">
+                            <h3 class="text-lg font-bold text-gray-900 mb-3">💡 Pro Tips</h3>
+                            <ul class="space-y-2 text-sm text-gray-700">
+                                <li class="flex gap-2">
+                                    <span class="text-orange-600 font-bold">•</span>
+                                    <span>Complete your profile 100% to increase match rate</span>
+                                </li>
+                                <li class="flex gap-2">
+                                    <span class="text-orange-600 font-bold">•</span>
+                                    <span>Apply within 24hrs of job posting</span>
+                                </li>
+                                <li class="flex gap-2">
+                                    <span class="text-orange-600 font-bold">•</span>
+                                    <span>Keep your resume updated</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    {{> footer}}
+
+    <script>
+        document.querySelectorAll('.stat-card').forEach((card, index) => {
+            card.classList.add('animate-fadeInUp');
+            card.style.animationDelay = index * 0.1 + 's';
+        });
+    </script>
+</body>
+</html>

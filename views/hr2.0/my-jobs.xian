@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {{> head}}
+    <title>All Jobs - HuntJob</title>
+    <style>
+        body { background: #ffffff; }
+        .header-section { background: white; padding: 2rem; border-bottom: 1px solid #e2e8f0; }
+        .jobs-container { padding: 2rem; }
+        .filter-card { background: white; padding: 1.5rem; border-radius: 0.75rem; border: 1px solid #e2e8f0; margin-bottom: 1.5rem; }
+        .jobs-table { background: white; border-radius: 0.75rem; border: 1px solid #e2e8f0; overflow: hidden; }
+        .jobs-table th { background: white; padding: 1rem; text-align: left; font-weight: 600; font-size: 0.875rem; color: #1e293b; border-bottom: 2px solid #e2e8f0; }
+        .jobs-table td { padding: 1rem; border-bottom: 1px solid #e2e8f0; color: #1e293b; }
+        .jobs-table tr:hover { background: #f8fafc; }
+        .jobs-table tr:last-child td { border-bottom: none; }
+        .status-open { background: #d1fae5; color: #065f46; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.875rem; font-weight: 600; display: inline-block; }
+        .status-closed { background: #f3f4f6; color: #6b7280; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.875rem; font-weight: 600; display: inline-block; }
+        .btn-primary { background: #3b82f6; color: white; padding: 0.5rem 1rem; border-radius: 0.5rem; border: none; cursor: pointer; font-weight: 600; font-size: 0.875rem; }
+        .btn-primary:hover { background: #2563eb; }
+        .btn-secondary { background: #e2e8f0; color: #334155; padding: 0.5rem 1rem; border-radius: 0.5rem; border: none; cursor: pointer; font-weight: 600; font-size: 0.875rem; }
+        .btn-secondary:hover { background: #cbd5e1; }
+        .action-btn { background: none; border: none; cursor: pointer; font-size: 1.25rem; }
+        .input-field { width: 100%; padding: 0.75rem; border: 1px solid #e2e8f0; border-radius: 0.5rem; font-size: 0.875rem; color: #1e293b; }
+        .input-field:focus { outline: none; border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
+        .filter-label { display: block; font-weight: 600; color: #1e293b; margin-bottom: 0.5rem; font-size: 0.875rem; }
+    </style>
+</head>
+<body style="padding-top: 60px;">
+    {{> navbar}}
+    
+    <div style="display: flex;">
+        {{> sidebar-manager}}
+        
+        <div style="flex: 1; overflow-y: auto; height: calc(100vh - 60px);">
+            <!-- Header -->
+            <div class="header-section">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <h1 style="font-size: 2rem; font-weight: 700; color: #1e293b; margin: 0;">All Jobs</h1>
+                        <p style="color: #64748b; margin: 0.5rem 0 0 0; font-size: 0.875rem;">Manage all job openings across departments</p>
+                    </div>
+                    <a href="/hr2.0/department-job-form" class="btn-primary" style="padding: 0.75rem 1.5rem;">+ Post New Job</a>
+                </div>
+            </div>
+
+            <div class="jobs-container">
+                <!-- Filters -->
+                <div class="filter-card">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin-bottom: 1rem;">
+                        <div>
+                            <label style="display: block; font-weight: 600; color: #334155; margin-bottom: 0.5rem; font-size: 0.875rem;">Status</label>
+                            <select id="statusFilter" onchange="applyFilters()" class="input-field">
+                                <option value="">All Status</option>
+                                <option value="open">Open</option>
+                                <option value="closed">Closed</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label style="display: block; font-weight: 600; color: #334155; margin-bottom: 0.5rem; font-size: 0.875rem;">Search</label>
+                            <input type="text" id="searchInput" placeholder="Search by job title..." onkeyup="applyFilters()" class="input-field">
+                        </div>
+                        <div style="display: flex; align-items: flex-end; gap: 0.5rem;">
+                            <button onclick="applyFilters()" class="btn-primary">Apply Filters</button>
+                            <button onclick="resetFilters()" class="btn-secondary">Reset</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Jobs Table -->
+                <div class="jobs-table">
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <thead>
+                            <tr>
+                                <th>Job Title</th>
+                                <th>Type</th>
+                                <th>Applications</th>
+                                <th>Status</th>
+                                <th>Posted</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="jobsTableBody">
+                            {{#if jobs}}
+                            {{#each jobs}}
+                            <tr class="job-row" data-title="{{toLowerCase this.title}}" data-status="{{#if this.isActive}}open{{else}}closed{{/if}}">
+                                <td>
+                                    <h3 style="margin: 0; font-weight: 600; color: #1e293b;">{{this.title}}</h3>
+                                    <p style="margin: 0.25rem 0 0 0; font-size: 0.875rem; color: #64748b;">{{this.department}}</p>
+                                </td>
+                                <td><span style="background: #dbeafe; color: #1e40af; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.875rem; font-weight: 600; display: inline-block;">{{this.employmentType}}</span></td>
+                                <td><span style="background: #fef3c7; color: #92400e; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.875rem; font-weight: 600; display: inline-block;">{{this.applicationCount}}</span></td>
+                                <td>
+                                    {{#if this.isActive}}
+                                    <span class="status-open">🟢 Open</span>
+                                    {{else}}
+                                    <span class="status-closed">⚫ Closed</span>
+                                    {{/if}}
+                                </td>
+                                <td style="color: #64748b; font-size: 0.875rem;">{{formatDate this.createdAt}}</td>
+                                <td>
+                                    <div style="display: flex; gap: 0.5rem;">
+                                        <a href="/jobs/{{this.id}}" class="action-btn" title="View Job">👁️</a>
+                                        <a href="/hr2.0/applications-list?jobId={{this.id}}" class="action-btn" title="View Applications">📋</a>
+                                        <a href="/hr2.0/department-job-form?id={{this.id}}" class="action-btn" title="Edit Job">✏️</a>
+                                        <button class="action-btn" onclick="if(confirm('Delete this job?')) deleteJob('{{this.id}}')" title="Delete Job">🗑️</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            {{/each}}
+                            {{else}}
+                            <tr>
+                                <td colspan="6" style="padding: 3rem; text-align: center; color: #64748b;">
+                                    <p style="margin: 0; font-size: 0.875rem;">No jobs found. Create one to get started!</p>
+                                </td>
+                            </tr>
+                            {{/if}}
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Stats -->
+                <div style="margin-top: 1.5rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                    <div style="background: white; padding: 1rem; border-radius: 0.75rem; border: 1px solid #e2e8f0;">
+                        <p style="margin: 0; color: #64748b; font-size: 0.875rem; font-weight: 600;">Total Jobs</p>
+                        <p style="margin: 0.5rem 0 0 0; font-size: 1.875rem; font-weight: 700; color: #1e293b;">{{jobs.length}}</p>
+                    </div>
+                    <div style="background: white; padding: 1rem; border-radius: 0.75rem; border: 1px solid #e2e8f0;">
+                        <p style="margin: 0; color: #64748b; font-size: 0.875rem; font-weight: 600;">Open Jobs</p>
+                        <p style="margin: 0.5rem 0 0 0; font-size: 1.875rem; font-weight: 700; color: #10b981;">-</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function applyFilters() {
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            const status = document.getElementById('statusFilter').value;
+            const rows = document.querySelectorAll('.job-row');
+            
+            rows.forEach(row => {
+                const title = row.getAttribute('data-title');
+                const rowStatus = row.getAttribute('data-status');
+                
+                const matchesSearch = !search || title.includes(search);
+                const matchesStatus = !status || rowStatus === status;
+                
+                row.style.display = (matchesSearch && matchesStatus) ? '' : 'none';
+            });
+        }
+
+        function resetFilters() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('statusFilter').value = '';
+            const rows = document.querySelectorAll('.job-row');
+            rows.forEach(row => row.style.display = '');
+        }
+
+        function deleteJob(jobId) {
+            fetch(`/hr2.0/api/jobs/${jobId}`, { method: 'DELETE' })
+                .then(res => {
+                    if (res.ok) location.reload();
+                    else alert('Failed to delete job');
+                })
+                .catch(err => alert('Error: ' + err));
+        }
+    </script>
+</body>
+</html>

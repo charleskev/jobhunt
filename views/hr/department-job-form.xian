@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {{> head}}
+    <title>Create Department Job - Manager - HuntJob</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .form-section { background: #f9fafb; padding: 1.5rem; border-radius: 0.75rem; margin-bottom: 2rem; }
+        .form-label { font-weight: 600; font-size: 0.875rem; margin-bottom: 0.5rem; }
+        .form-input, .form-select, .form-textarea { 
+            width: 100%; 
+            padding: 0.75rem; 
+            border: 1px solid #d1d5db; 
+            border-radius: 0.5rem;
+            font-family: inherit;
+        }
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            ring: 2px;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+        .required::after { content: " *"; color: #ef4444; }
+    </style>
+</head>
+<body class="bg-gray-50 pt-[60px]">
+    {{> navbar}}
+    
+    <div class="flex h-[calc(100vh-60px)]">
+        {{> sidebar-hr}}
+        
+        <div class="flex-1 overflow-y-auto flex flex-col">
+            <!-- Header -->
+            <div class="bg-gradient-to-r from-blue-600 to-blue-700 text-white py-8 px-6 flex-shrink-0">
+                <div class="max-w-4xl mx-auto">
+                    <h1 class="text-4xl font-bold mb-2">Create Department Job</h1>
+                    <p class="text-blue-100">Post a new job for a specific department</p>
+                </div>
+            </div>
+
+            <!-- Form Container -->
+            <div class="flex-1 overflow-y-auto">
+                <div class="max-w-4xl mx-auto px-4 py-8">
+                    <form method="POST" action="/hr/api/jobs" class="bg-white rounded-xl shadow-lg overflow-hidden">
+                        <!-- Hidden category field for department jobs -->
+                        <input type="hidden" name="category" value="department">
+                    
+                    <!-- Basic Information Section -->
+                    <div class="p-8">
+                        <h2 class="text-2xl font-bold text-gray-900 mb-6 flex items-center">
+                            <i class="fas fa-briefcase text-blue-600 mr-3"></i>
+                            Basic Information
+                        </h2>
+                        <div class="form-section">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block form-label text-gray-700 required">Job Title</label>
+                                    <input type="
+                                    
+                                    text" name="title" required class="form-input" placeholder="e.g., Administrative Officer">
+                                </div>
+                                <div>
+                                    <label class="block form-label text-gray-700 required">Department</label>
+                                    <input type="text" name="department" required class="form-input" placeholder="Your department name" readonly value="{{manager.department}}">
+                                    <small class="text-gray-500">Auto-filled from your profile</small>
+                                </div>
+                                <div>
+                                    <label class="block form-label text-gray-700 required">Employment Type</label>
+                                    <select name="employmentType" required class="form-select">
+                                        <option value="">Select Type</option>
+                                        <option value="Full-time">Full-time</option>
+                                        <option value="Part-time">Part-time</option>
+                                        <option value="Contract">Contract</option>
+                                        <option value="Casual">Casual</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block form-label text-gray-700 required">Number of Positions</label>
+                                    <input type="number" name="positions" value="1" min="1" required class="form-input" placeholder="1">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Description Section -->
+                        <h2 class="text-2xl font-bold text-gray-900 mb-6 mt-8 flex items-center">
+                            <i class="fas fa-align-left text-blue-600 mr-3"></i>
+                            Job Details
+                        </h2>
+                        <div class="form-section">
+                            <div class="mb-6">
+                                <label class="block form-label text-gray-700 required">Description</label>
+                                <textarea name="description" required rows="6" class="form-textarea" placeholder="Describe the job responsibilities and duties for your department"></textarea>
+                            </div>
+                            <div class="mb-6">
+                                <label class="block form-label text-gray-700">Requirements</label>
+                                <textarea name="requirements" rows="4" class="form-textarea" placeholder="List the required qualifications, experience, and skills specific to your department"></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Compensation Section -->
+                        <h2 class="text-2xl font-bold text-gray-900 mb-6 mt-8 flex items-center">
+                            <i class="fas fa-money-bill-wave text-blue-600 mr-3"></i>
+                            Compensation & Deadline
+                        </h2>
+                        <div class="form-section">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                                <div>
+                                    <label class="block form-label text-gray-700">Salary Range</label>
+                                    <input type="text" name="salaryRange" class="form-input" placeholder="e.g., 18,000 - 25,000 PHP">
+                                </div>
+                                <div>
+                                    <label class="block form-label text-gray-700 required">Application Deadline</label>
+                                    <input type="date" name="deadline" required class="form-input">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Required Documents Section -->
+                        <h2 class="text-2xl font-bold text-gray-900 mb-6 mt-8 flex items-center">
+                            <i class="fas fa-file-alt text-blue-600 mr-3"></i>
+                            Required Documents
+                        </h2>
+                        <div class="form-section">
+                            <label class="block form-label text-gray-700 mb-4">Select required documents for applicants:</label>
+                            <div class="space-y-3">
+                                <label class="flex items-center gap-3 cursor-pointer">
+                                    <input type="checkbox" name="requiredDocuments" value="Resume" checked class="w-5 h-5 text-blue-600 rounded">
+                                    <span class="text-gray-700">Resume</span>
+                                </label>
+                                <label class="flex items-center gap-3 cursor-pointer">
+                                    <input type="checkbox" name="requiredDocuments" value="Diploma/Transcript" checked class="w-5 h-5 text-blue-600 rounded">
+                                    <span class="text-gray-700">Diploma/Transcript</span>
+                                </label>
+                                <label class="flex items-center gap-3 cursor-pointer">
+                                    <input type="checkbox" name="requiredDocuments" value="NBI Clearance" class="w-5 h-5 text-blue-600 rounded">
+                                    <span class="text-gray-700">NBI Clearance</span>
+                                </label>
+                                <label class="flex items-center gap-3 cursor-pointer">
+                                    <input type="checkbox" name="requiredDocuments" value="Medical Certificate" class="w-5 h-5 text-blue-600 rounded">
+                                    <span class="text-gray-700">Medical Certificate</span>
+                                </label>
+                                <label class="flex items-center gap-3 cursor-pointer">
+                                    <input type="checkbox" name="requiredDocuments" value="Barangay Clearance" class="w-5 h-5 text-blue-600 rounded">
+                                    <span class="text-gray-700">Barangay Clearance</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="flex gap-4 mt-8 pt-8 border-t border-gray-200">
+                            <button type="submit" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition flex items-center justify-center gap-2">
+                                <i class="fas fa-check"></i> Post Job
+                            </button>
+                            <a href="/hr2.0/dashboard" class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-900 px-6 py-3 rounded-lg font-semibold transition flex items-center justify-center gap-2">
+                                <i class="fas fa-times"></i> Cancel
+                            </a>
+                        </div>
+                    </div>
+                </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{> footer}}
+
+        <script>
+            document.querySelector('form').addEventListener('submit', function(e) {
+                // Get all checked document checkboxes
+                const checkedDocs = Array.from(document.querySelectorAll('input[name="requiredDocuments"]:checked'))
+                    .map(cb => cb.value);
+                
+                // Convert the checkboxes to a hidden input with JSON array
+                const docsInput = document.createElement('input');
+                docsInput.type = 'hidden';
+                docsInput.name = 'requiredDocuments';
+                docsInput.value = JSON.stringify(checkedDocs);
+                
+                // Remove the original checkboxes from form submission
+                document.querySelectorAll('input[name="requiredDocuments"]').forEach(cb => {
+                    cb.name = 'requiredDocuments_ignored';
+                });
+                
+                this.appendChild(docsInput);
+            });
+        </script>
+    </div>
+</body>
+</html>

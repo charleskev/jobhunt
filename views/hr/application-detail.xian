@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {{> head}}
+    <title>Application Detail - HR - HuntJob</title>
+</head>
+<body style="padding-top: 60px">
+{{> navbar}}
+    <div class="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100" style="margin-top: 0">
+      <div class="container mx-auto px-4 py-8">
+        <!-- Header -->
+        <div class="mb-8">
+          <a href="/hr/applications-list" class="text-blue-600 hover:text-blue-700 font-medium mb-4 inline-block">← Back to Applications</a>
+          <h1 class="text-4xl font-bold text-slate-900 mb-2">Application Details</h1>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <!-- Main Content -->
+          <div class="lg:col-span-2 bg-white rounded-lg shadow p-8">
+            <!-- Applicant Info -->
+            <div class="mb-8 pb-8 border-b border-slate-200">
+              <div class="flex items-start gap-6 mb-6">
+                <img src="{{#if application.applicant.profilePhoto}}{{application.applicant.profilePhoto}}{{else}}/assets/default-avatar.png{{/if}}" alt="Profile" class="w-20 h-20 rounded-full object-cover bg-slate-200">
+                <div class="flex-1">
+                  <h2 class="text-3xl font-bold text-slate-900 mb-1">{{application.applicant.firstName}} {{application.applicant.lastName}}</h2>
+                  <p class="text-slate-600 mb-2">{{application.applicant.email}}</p>
+                  <p class="text-slate-600 mb-2">{{application.applicant.contactNumber}}</p>
+                  <p class="text-slate-600">{{application.applicant.address}}</p>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-3 gap-4">
+                <div>
+                  <p class="text-sm text-slate-600">Experience</p>
+                  <p class="font-semibold text-slate-900">{{application.applicant.experience}} years</p>
+                </div>
+                <div>
+                  <p class="text-sm text-slate-600">Applied On</p>
+                  <p class="font-semibold text-slate-900">{{application.appliedAt}}</p>
+                </div>
+                <div>
+                  <p class="text-sm text-slate-600">Status</p>
+                  <span class="px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800">{{application.status}}</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Job Info -->
+            <div class="mb-8 pb-8 border-b border-slate-200">
+              <h3 class="text-xl font-bold text-slate-900 mb-4">Job Position</h3>
+              <h4 class="text-2xl font-bold text-slate-900 mb-2">{{application.job.title}}</h4>
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <p class="text-sm text-slate-600">Location</p>
+                  <p class="font-semibold text-slate-900">{{application.job.location}}</p>
+                </div>
+                <div>
+                  <p class="text-sm text-slate-600">Job Type</p>
+                  <p class="font-semibold text-slate-900">{{application.job.jobType}}</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Cover Letter -->
+            {{#if application.coverLetter}}
+            <div class="mb-8 pb-8 border-b border-slate-200">
+              <h3 class="text-xl font-bold text-slate-900 mb-4">Cover Letter</h3>
+              <div class="bg-slate-50 p-4 rounded-lg">
+                <p class="text-slate-700 whitespace-pre-wrap">{{application.coverLetter}}</p>
+              </div>
+            </div>
+            {{/if}}
+
+            <!-- Documents -->
+            {{#if application.documents}}
+            <div>
+              <h3 class="text-xl font-bold text-slate-900 mb-4">Submitted Documents</h3>
+              <div class="space-y-3">
+                {{#each application.documents}}
+                <div class="flex items-center justify-between p-4 border border-slate-200 rounded-lg hover:bg-slate-50">
+                  <div class="flex items-center gap-3">
+                    <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                    </svg>
+                    <div>
+                      <p class="font-medium text-slate-900">{{this.documentType}}</p>
+                      <p class="text-sm text-slate-600">{{this.fileName}}</p>
+                    </div>
+                  </div>
+                  <a href="{{this.filePath}}" target="_blank" download class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                    </svg>
+                    Download
+                  </a>
+                </div>
+                {{/each}}
+              </div>
+            </div>
+            {{/if}}
+          </div>
+
+          <!-- Sidebar -->
+          <div>
+            <!-- Status Update -->
+            <div class="bg-white rounded-lg shadow p-6 mb-6">
+              <h3 class="text-lg font-bold text-slate-900 mb-4">Update Status</h3>
+              <form method="POST" action="/hr/api/applications/{{application.id}}/status">
+                <div class="mb-4">
+                  <label class="block text-sm font-medium text-slate-700 mb-2">Status</label>
+                  <select name="status" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="submitted" {{#if (eq application.status 'submitted')}}selected{{/if}}>Submitted</option>
+                    <option value="under_review" {{#if (eq application.status 'under_review')}}selected{{/if}}>Under Review</option>
+                    <option value="shortlisted" {{#if (eq application.status 'shortlisted')}}selected{{/if}}>Shortlisted</option>
+                    <option value="interview" {{#if (eq application.status 'interview')}}selected{{/if}}>Interview</option>
+                    <option value="rejected" {{#if (eq application.status 'rejected')}}selected{{/if}}>Rejected</option>
+                    <option value="hired" {{#if (eq application.status 'hired')}}selected{{/if}}>Hired</option>
+                  </select>
+                </div>
+
+                <div class="mb-4">
+                  <label class="block text-sm font-medium text-slate-700 mb-2">Rating (1-5)</label>
+                  <input type="number" name="rating" min="1" max="5" value="{{application.rating}}" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+
+                <div class="mb-4">
+                  <label class="block text-sm font-medium text-slate-700 mb-2">Feedback</label>
+                  <textarea name="feedback" rows="4" placeholder="Add feedback..." class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">{{application.feedback}}</textarea>
+                </div>
+
+                <button type="submit" class="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-medium">
+                  Save Changes
+                </button>
+                <div id="statusMessage" class="mt-4 p-4 rounded-lg hidden"></div>
+              </form>
+            </div>
+
+            <!-- Schedule Interview -->
+            <div class="bg-white rounded-lg shadow p-6">
+              <h3 class="text-lg font-bold text-slate-900 mb-4">Schedule Interview</h3>
+              <form id="interviewForm" method="POST" action="/hr/api/applications/{{application.id}}/interview">
+                <div class="mb-4">
+                  <label class="block text-sm font-medium text-slate-700 mb-2">Interview Date & Time</label>
+                  <input type="datetime-local" name="interviewDate" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+
+                <button type="submit" class="w-full px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition font-medium">
+                  Schedule Interview
+                </button>
+                <div id="interviewMessage" class="mt-4 p-4 rounded-lg hidden"></div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+{{> footer}}
+
+<script>
+  // Handle Status Update Form
+  document.querySelector('form[action*="/status"]').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const formData = new FormData(e.target);
+    const data = {
+      status: formData.get('status'),
+      rating: formData.get('rating'),
+      feedback: formData.get('feedback')
+    };
+    
+    try {
+      const response = await fetch(e.target.action, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      });
+      
+      const result = await response.json();
+      const messageDiv = document.getElementById('statusMessage');
+      
+      if (result.success) {
+        messageDiv.className = 'mt-4 p-4 rounded-lg bg-green-100 text-green-800 border border-green-300';
+        messageDiv.textContent = '✓ Application status updated successfully!';
+        messageDiv.classList.remove('hidden');
+        
+        setTimeout(() => {
+          location.reload();
+        }, 2000);
+      } else {
+        messageDiv.className = 'mt-4 p-4 rounded-lg bg-red-100 text-red-800 border border-red-300';
+        messageDiv.textContent = '✗ Error: ' + (result.message || 'Failed to update status');
+        messageDiv.classList.remove('hidden');
+      }
+    } catch (error) {
+      const messageDiv = document.getElementById('statusMessage');
+      messageDiv.className = 'mt-4 p-4 rounded-lg bg-red-100 text-red-800 border border-red-300';
+      messageDiv.textContent = '✗ Error: ' + error.message;
+      messageDiv.classList.remove('hidden');
+    }
+  });
+
+  // Handle Interview Schedule Form
+  document.getElementById('interviewForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const formData = new FormData(e.target);
+    const data = {
+      interviewDate: formData.get('interviewDate')
+    };
+    
+    if (!data.interviewDate) {
+      const messageDiv = document.getElementById('interviewMessage');
+      messageDiv.className = 'mt-4 p-4 rounded-lg bg-yellow-100 text-yellow-800 border border-yellow-300';
+      messageDiv.textContent = '⚠ Please select a date and time';
+      messageDiv.classList.remove('hidden');
+      return;
+    }
+    
+    try {
+      const response = await fetch(e.target.action, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      });
+      
+      const result = await response.json();
+      const messageDiv = document.getElementById('interviewMessage');
+      
+      if (result.success) {
+        messageDiv.className = 'mt-4 p-4 rounded-lg bg-green-100 text-green-800 border border-green-300';
+        messageDiv.textContent = '✓ Interview scheduled successfully!';
+        messageDiv.classList.remove('hidden');
+        
+        e.target.reset();
+        
+        setTimeout(() => {
+          location.reload();
+        }, 2000);
+      } else {
+        messageDiv.className = 'mt-4 p-4 rounded-lg bg-red-100 text-red-800 border border-red-300';
+        messageDiv.textContent = '✗ Error: ' + (result.message || 'Failed to schedule interview');
+        messageDiv.classList.remove('hidden');
+      }
+    } catch (error) {
+      const messageDiv = document.getElementById('interviewMessage');
+      messageDiv.className = 'mt-4 p-4 rounded-lg bg-red-100 text-red-800 border border-red-300';
+      messageDiv.textContent = '✗ Error: ' + error.message;
+      messageDiv.classList.remove('hidden');
+    }
+  });
+</script>
+</body>
+</html>

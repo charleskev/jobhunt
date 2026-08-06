@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {{> head}}
+    <title>Applications List - HuntJob</title>
+    <style>
+        body { background: #ffffff; margin: 0; padding: 0; }
+        .header-section { background: white; padding: 2rem; border-bottom: 1px solid #e2e8f0; }
+        .apps-container { padding: 2rem; }
+        .filter-card { background: white; padding: 1.5rem; border-radius: 0.75rem; border: 1px solid #e2e8f0; margin-bottom: 1.5rem; }
+        .apps-table { background: white; border-radius: 0.75rem; border: 1px solid #e2e8f0; overflow: hidden; }
+        .apps-table th { background: white; padding: 1rem; text-align: left; font-weight: 600; font-size: 0.875rem; color: #1e293b; border-bottom: 2px solid #e2e8f0; position: sticky; top: 0; }
+        .apps-table td { padding: 1rem; border-bottom: 1px solid #e2e8f0; color: #1e293b; }
+        .apps-table tr:hover { background: #f8fafc; }
+        .apps-table tr:last-child td { border-bottom: none; }
+        .status-badge { padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.875rem; font-weight: 600; display: inline-block; }
+        .status-submitted { background: #fef3c7; color: #b45309; }
+        .status-shortlisted { background: #dbeafe; color: #1e40af; }
+        .status-interview { background: #e9d5ff; color: #6b21a8; }
+        .status-hired { background: #d1fae5; color: #065f46; }
+        .status-rejected { background: #fee2e2; color: #991b1b; }
+        .status-pending { background: #f3f4f6; color: #6b7280; }
+        .btn-primary { background: #3b82f6; color: white; padding: 0.5rem 1rem; border-radius: 0.5rem; border: none; cursor: pointer; font-weight: 600; font-size: 0.875rem; }
+        .btn-primary:hover { background: #2563eb; }
+        .btn-secondary { background: #e2e8f0; color: #334155; padding: 0.5rem 1rem; border-radius: 0.5rem; border: none; cursor: pointer; font-weight: 600; font-size: 0.875rem; }
+        .btn-secondary:hover { background: #cbd5e1; }
+        .action-btn { background: none; border: none; cursor: pointer; font-size: 1.25rem; margin: 0 0.25rem; }
+        .action-btn:hover { opacity: 0.7; }
+        .input-field { width: 100%; padding: 0.75rem; border: 1px solid #e2e8f0; border-radius: 0.5rem; font-size: 0.875rem; color: #1e293b; }
+        .input-field:focus { outline: none; border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
+        .filter-label { display: block; font-weight: 600; color: #1e293b; margin-bottom: 0.5rem; font-size: 0.875rem; }
+        .avatar { width: 40px; height: 40px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-weight: 600; color: white; font-size: 0.875rem; margin-right: 0.5rem; flex-shrink: 0; }
+        .table-container { overflow-x: auto; }
+        .stats { color: #64748b; font-size: 0.875rem; margin-top: 1rem; }
+    </style>
+</head>
+<body style="padding-top: 60px;">
+    {{> navbar}}
+    
+    <div style="display: flex;">
+        {{> sidebar-manager}}
+        
+        <div style="flex: 1; overflow-y: auto; height: calc(100vh - 60px);">
+            <!-- Header -->
+            <div class="header-section">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <h1 style="font-size: 2rem; font-weight: 700; color: #1e293b; margin: 0;">All Applications</h1>
+                        <p style="color: #64748b; margin: 0.5rem 0 0 0; font-size: 0.875rem;">Review and manage applications</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="apps-container">
+                <!-- Filters -->
+                <div class="filter-card">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin-bottom: 1rem;">
+                        <div>
+                            <label class="filter-label">Search by Name/Email</label>
+                            <input type="text" id="searchInput" placeholder="Type name or email..." onkeyup="applyFilters()" class="input-field">
+                        </div>
+                        <div>
+                            <label class="filter-label">Status</label>
+                            <select id="statusFilter" onchange="applyFilters()" class="input-field">
+                                <option value="">All Status</option>
+                                <option value="submitted">Submitted</option>
+                                <option value="shortlisted">Shortlisted</option>
+                                <option value="interview">Interview</option>
+                                <option value="hired">Hired</option>
+                                <option value="rejected">Rejected</option>
+                                <option value="pending">Pending</option>
+                            </select>
+                        </div>
+                        <div style="display: flex; align-items: flex-end; gap: 0.5rem;">
+                            <button onclick="applyFilters()" class="btn-primary" style="flex: 1;">Apply Filters</button>
+                            <button onclick="resetFilters()" class="btn-secondary" style="flex: 1;">Reset</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Applications Table -->
+                <div class="table-container">
+                    <div class="apps-table">
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <thead>
+                                <tr>
+                                    <th style="white-space: nowrap;">Applicant</th>
+                                    <th style="white-space: nowrap;">Position</th>
+                                    <th style="white-space: nowrap;">Status</th>
+                                    <th style="white-space: nowrap;">Applied Date</th>
+                                    <th style="white-space: nowrap;">Email</th>
+                                    <th style="white-space: nowrap; text-align: center;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="applicationsTableBody">
+                                {{#if applications}}
+                                {{#each applications}}
+                                <tr class="app-row" data-status="{{toLowerCase this.status}}" data-email="{{this.applicant.email}}" data-name="{{toLowerCase (concat this.applicant.firstName " " this.applicant.lastName)}}">
+                                    <td style="white-space: nowrap;">
+                                        <div style="display: flex; align-items: center; gap: 0.75rem;">
+                                            {{#if this.applicant.profilePhoto}}
+                                            <img src="{{this.applicant.profilePhoto}}" alt="{{this.applicant.firstName}}" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 1px solid #e2e8f0; flex-shrink: 0;">
+                                            {{else}}
+                                            <div class="avatar" style="background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);">{{substr (concat this.applicant.firstName " " this.applicant.lastName) 0 1}}</div>
+                                            {{/if}}
+                                            <div style="min-width: 0;">
+                                                <p style="margin: 0; font-weight: 600; color: #1e293b;">{{this.applicant.firstName}} {{this.applicant.lastName}}</p>
+                                                <p style="margin: 0.25rem 0 0 0; font-size: 0.875rem; color: #64748b;">{{this.applicant.email}}</p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td style="white-space: nowrap; font-weight: 600;">{{this.job.title}}</td>
+                                    <td style="white-space: nowrap;">
+                                        {{#if (eq this.status "submitted")}}
+                                        <span class="status-badge status-submitted">📤 Submitted</span>
+                                        {{else if (eq this.status "shortlisted")}}
+                                        <span class="status-badge status-shortlisted">⭐ Shortlisted</span>
+                                        {{else if (eq this.status "interview")}}
+                                        <span class="status-badge status-interview">📅 Interview</span>
+                                        {{else if (eq this.status "hired")}}
+                                        <span class="status-badge status-hired">✓ Hired</span>
+                                        {{else if (eq this.status "rejected")}}
+                                        <span class="status-badge status-rejected">✕ Rejected</span>
+                                        {{else}}
+                                        <span class="status-badge status-pending">⏳ {{this.status}}</span>
+                                        {{/if}}
+                                    </td>
+                                    <td style="white-space: nowrap; color: #64748b;">
+                                        {{#if this.createdAt}}
+                                        {{formatDate this.createdAt}}
+                                        {{/if}}
+                                    </td>
+                                    <td style="white-space: nowrap; color: #64748b;">{{this.applicant.email}}</td>
+                                    <td style="white-space: nowrap; text-align: center;">
+                                        <a href="/hr2.0/application-review/{{this.id}}" class="action-btn" title="Review Application">👁️</a>
+                                        <a href="/applicant/profile/{{this.applicant.id}}" class="action-btn" title="View Profile">👤</a>
+                                        <button onclick="changeStatus({{this.id}}, 'shortlisted')" class="action-btn" title="Shortlist">⭐</button>
+                                        <button onclick="changeStatus({{this.id}}, 'hired')" class="action-btn" title="Hire">✓</button>
+                                        <button onclick="changeStatus({{this.id}}, 'rejected')" class="action-btn" title="Reject">✕</button>
+                                    </td>
+                                </tr>
+                                {{/each}}
+                                {{else}}
+                                <tr>
+                                    <td colspan="6" style="padding: 3rem; text-align: center; color: #94a3b8;">
+                                        <p style="margin: 0; font-size: 1rem; font-weight: 500;">No applications found</p>
+                                    </td>
+                                </tr>
+                                {{/if}}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Footer Stats -->
+                <div class="stats">
+                    Total: <strong>{{applications.length}}</strong> applications
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{> footer}}
+
+    <script>
+        function applyFilters() {
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            const status = document.getElementById('statusFilter').value.toLowerCase();
+            const rows = document.querySelectorAll('.app-row');
+            
+            let visibleCount = 0;
+            rows.forEach(row => {
+                const rowStatus = row.getAttribute('data-status');
+                const rowEmail = row.getAttribute('data-email').toLowerCase();
+                const rowName = row.getAttribute('data-name');
+                
+                const matchesSearch = !search || rowEmail.includes(search) || rowName.includes(search);
+                const matchesStatus = !status || rowStatus === status;
+                
+                if (matchesSearch && matchesStatus) {
+                    row.style.display = '';
+                    visibleCount++;
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+
+        function resetFilters() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('statusFilter').value = '';
+            const rows = document.querySelectorAll('.app-row');
+            rows.forEach(row => row.style.display = '');
+        }
+
+        function changeStatus(applicationId, newStatus) {
+            if (!confirm(`Change status to ${newStatus}?`)) return;
+            
+            fetch(`/hr2.0/api/applications/${applicationId}/status`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ status: newStatus })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Application status updated successfully');
+                    location.reload();
+                } else {
+                    alert('Error updating status: ' + (data.message || 'Unknown error'));
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error updating status');
+            });
+        }
+    </script>
+</body>
+</html>

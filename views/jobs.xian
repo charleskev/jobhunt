@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {{> head}}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>Browse Jobs - HuntJob</title>
+    <style>
+        .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .job-card { 
+            transition: all 0.3s ease;
+            border-left: 4px solid #667eea;
+        }
+        .job-card:hover { 
+            transform: translateY(-4px); 
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15); 
+            border-left-color: #764ba2;
+        }
+        .filter-card { transition: all 0.3s ease; }
+        .filter-card:hover { background-color: #f9fafb; }
+        .badge { display: inline-block; padding: 0.375rem 0.75rem; border-radius: 0.5rem; font-size: 0.75rem; font-weight: 600; }
+        .badge-department { background-color: #dbeafe; color: #0c4a6e; }
+        .badge-type { background-color: #d1fae5; color: #065f46; }
+    </style>
+</head>
+<body class="bg-gray-50">
+<div class="flex h-screen">
+    {{> sidebar-applicant}}    
+    <div class="flex-1 overflow-y-auto">
+        <!-- Gradient Header -->
+        <div class="gradient-bg text-white py-8 px-4">
+            <div class="max-w-6xl mx-auto">
+                <h1 class="text-4xl font-black mb-1">Browse Jobs</h1>
+                <p class="text-purple-100">Discover opportunities in the municipal sector</p>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="max-w-6xl mx-auto px-4 py-8">
+            <!-- Category Buttons -->
+            <div class="mb-8">
+                <h3 class="text-sm font-semibold text-gray-700 mb-3">Filter by Category</h3>
+                <div class="flex flex-wrap gap-3">
+                    <button onclick="filterByJobType('all')" class="category-btn px-6 py-3 rounded-xl font-semibold transition-all {{#if (eq jobType 'all')}}selected{{/if}}" id="btn-all" style="background-color: #667eea; color: white;">
+                        <i class="fas fa-briefcase mr-2"></i>All Jobs
+                    </button>
+                    <button onclick="filterByJobType('municipality')" class="category-btn px-6 py-3 rounded-xl font-semibold transition-all border-2 border-blue-400 text-blue-600 bg-blue-50 hover:bg-blue-100 {{#if (eq jobType 'municipality')}}selected{{/if}}" id="btn-municipality">
+                        <i class="fas fa-university mr-2"></i>Municipality (HR)
+                    </button>
+                    <button onclick="filterByJobType('department')" class="category-btn px-6 py-3 rounded-xl font-semibold transition-all border-2 border-amber-400 text-amber-600 bg-amber-50 hover:bg-amber-100 {{#if (eq jobType 'department')}}selected{{/if}}" id="btn-department">
+                        <i class="fas fa-sitemap mr-2"></i>Department (Manager)
+                    </button>
+                </div>
+            </div>
+
+            <!-- Search and Filter Section -->
+            <div class="mb-8 grid grid-cols-1 md:grid-cols-6 gap-4">
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Search Jobs</label>
+                    <input 
+                        type="text" 
+                        id="searchInput"
+                        placeholder="Job title..."
+                        value="{{search}}"
+                        class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm"
+                    >
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Job Type</label>
+                    <select id="jobTypeFilter" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm">
+                        <option value="all" {{#if (eq jobType 'all')}}selected{{/if}}>All Jobs</option>
+                        <option value="municipality" {{#if (eq jobType 'municipality')}}selected{{/if}}>Municipality Jobs (HR)</option>
+                        <option value="department" {{#if (eq jobType 'department')}}selected{{/if}}>Department Jobs (Manager)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Municipality</label>
+                    <select id="municipalityFilter" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm">
+                        <option value="">All Municipalities</option>
+                        {{#each municipalities}}
+                        <option value="{{this}}" {{#if (eq ../municipality this)}}selected{{/if}}>{{this}}</option>
+                        {{/each}}
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Department</label>
+                    <select id="departmentFilter" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm">
+                        <option value="">All Departments</option>
+                        {{#each departments}}
+                        <option value="{{this}}" {{#if (eq ../department this)}}selected{{/if}}>{{this}}</option>
+                        {{/each}}
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Employment Type</label>
+                    <select id="typeFilter" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm">
+                        <option value="">All Types</option>
+                        <option value="Full-time" {{#if (eq type 'Full-time')}}selected{{/if}}>Full-time</option>
+                        <option value="Part-time" {{#if (eq type 'Part-time')}}selected{{/if}}>Part-time</option>
+                        <option value="Contract" {{#if (eq type 'Contract')}}selected{{/if}}>Contract</option>
+                        <option value="Casual" {{#if (eq type 'Casual')}}selected{{/if}}>Casual</option>
+                    </select>
+                </div>
+                <div class="flex items-end">
+                    <button onclick="applyFilters()" class="w-full bg-purple-600 hover:bg-purple-700 text-white px-4 py-3 rounded-xl font-semibold transition text-sm">
+                        <i class="fas fa-search mr-2"></i>Search
+                    </button>
+                </div>
+            </div>
+
+            <!-- Results Header -->
+            <div class="mb-6 flex justify-between items-center">
+                <div>
+                    <h2 class="text-2xl font-bold text-gray-900">Available Positions</h2>
+                    <p class="text-sm text-gray-600 mt-1">{{total}} jobs found</p>
+                </div>
+            </div>            <!-- Jobs List -->
+            {{#if jobs}}
+            <div class="space-y-4">
+                {{#each jobs}}
+                <div class="job-card bg-white rounded-2xl shadow-md p-6 hover:shadow-lg">
+                    <!-- Job Header -->
+                    <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-4">
+                        <div class="flex-1">
+                            <h3 class="text-lg font-bold text-gray-900 mb-1">{{title}}</h3>
+                            <p class="text-sm text-gray-600 mb-3">
+                                <i class="fas fa-building mr-1"></i>
+                                {{#if poster}}
+                                {{poster.firstName}} {{poster.lastName}}
+                                {{else}}
+                                Municipal Department
+                                {{/if}}
+                            </p>
+                            <div class="flex flex-wrap gap-2">
+                                {{#if category}}
+                                {{#if (eq category "municipality")}}
+                                <span class="badge badge-type" style="background-color: #dbeafe; color: #0c4a6e;"><i class="fas fa-university mr-1"></i>Municipality</span>
+                                {{#if municipality}}
+                                <span class="badge badge-department">{{municipality}}</span>
+                                {{/if}}
+                                {{else if (eq category "department")}}
+                                <span class="badge badge-type" style="background-color: #fef3c7; color: #92400e;"><i class="fas fa-sitemap mr-1"></i>Department</span>
+                                {{#if department}}
+                                <span class="badge badge-department">{{department}}</span>
+                                {{/if}}
+                                {{/if}}
+                                {{else}}
+                                {{#if poster.userType}}
+                                {{#if (eq poster.userType "hr_admin")}}
+                                <span class="badge badge-type" style="background-color: #dbeafe; color: #0c4a6e;"><i class="fas fa-university mr-1"></i>Municipality</span>
+                                {{#if municipality}}
+                                <span class="badge badge-department">{{municipality}}</span>
+                                {{/if}}
+                                {{else if (eq poster.userType "dept_manager")}}
+                                <span class="badge badge-type" style="background-color: #fef3c7; color: #92400e;"><i class="fas fa-sitemap mr-1"></i>Department</span>
+                                {{#if department}}
+                                <span class="badge badge-department">{{department}}</span>
+                                {{/if}}
+                                {{/if}}
+                                {{/if}}
+                                {{/if}}
+                                <span class="badge badge-type">{{employmentType}}</span>
+                            </div>
+                        </div>
+                        {{#if user}}
+                        <button onclick="toggleSaveJob('{{id}}')" class="text-2xl transition hover:scale-110 text-red-500" title="Save job">
+                            <i class="fas fa-heart"></i>
+                        </button>
+                        {{/if}}
+                    </div>
+
+                    <!-- Job Description -->
+                    <p class="text-gray-700 text-sm line-clamp-2 mb-4">{{description}}</p>
+
+                    <!-- Job Info Grid -->
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-5 text-sm">
+                        <div class="bg-gray-50 rounded-lg p-3">
+                            <p class="text-gray-600 text-xs font-medium">Positions</p>
+                            <p class="text-gray-900 font-bold text-lg">{{positions}}</p>
+                        </div>
+                        <div class="bg-gray-50 rounded-lg p-3">
+                            <p class="text-gray-600 text-xs font-medium">Views</p>
+                            <p class="text-gray-900 font-bold text-lg">{{viewCount}}</p>
+                        </div>
+                        {{#if salaryRange}}
+                        <div class="bg-purple-50 rounded-lg p-3">
+                            <p class="text-gray-600 text-xs font-medium">Salary</p>
+                            <p class="text-purple-600 font-bold text-lg">{{salaryRange}}</p>
+                        </div>
+                        {{/if}}
+                        <div class="bg-gray-50 rounded-lg p-3">
+                            <p class="text-gray-600 text-xs font-medium">Posted</p>
+                            <p class="text-gray-900 font-bold text-lg">Recently</p>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="flex flex-col sm:flex-row gap-3">
+                        <a href="/jobs/{{id}}" class="flex-1 bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg font-semibold text-center text-sm transition">
+                            <i class="fas fa-eye mr-1"></i>View Details
+                        </a>
+                        {{#if user}}
+                        <a href="/applicant/apply?jobId={{id}}" class="flex-1 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-semibold text-center text-sm transition">
+                            <i class="fas fa-paper-plane mr-1"></i>Apply
+                        </a>
+                        {{else}}
+                        <a href="/auth/login" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-semibold text-center text-sm transition">
+                            <i class="fas fa-sign-in-alt mr-1"></i>Login to Apply
+                        </a>
+                        {{/if}}
+                    </div>
+                </div>
+                {{/each}}
+            </div>
+
+            <!-- Pagination -->
+            {{#if totalPages}}
+            <div class="mt-8 flex justify-center gap-2 flex-wrap">
+                {{#if currentPage}}
+                {{#if (gt currentPage 1)}}
+                <a href="/jobs?page={{sub currentPage 1}}" class="px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 text-sm font-medium">
+                    <i class="fas fa-chevron-left mr-1"></i>Previous
+                </a>
+                {{/if}}
+                {{/if}}
+
+                {{#each (range totalPages)}}
+                <a href="/jobs?page={{add this 1}}" class="px-4 py-2 {{#if (eq this ../currentPage)}}bg-purple-600 text-white{{else}}bg-white border border-gray-300 hover:bg-gray-50{{/if}} rounded-lg text-sm font-medium">
+                    {{add this 1}}
+                </a>
+                {{/each}}
+
+                {{#if currentPage}}
+                {{#if (lt currentPage totalPages)}}
+                <a href="/jobs?page={{add currentPage 1}}" class="px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 text-sm font-medium">
+                    Next<i class="fas fa-chevron-right ml-1"></i>
+                </a>
+                {{/if}}
+                {{/if}}
+            </div>
+            {{/if}}
+            {{else}}
+            <!-- Empty State -->
+            <div class="bg-white rounded-2xl shadow-md p-12 text-center">
+                <div class="mb-4">
+                    <i class="fas fa-briefcase text-6xl text-gray-300"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-gray-900 mb-2">No jobs found</h3>
+                <p class="text-gray-600 mb-6">Try adjusting your filters or check back soon for new positions.</p>
+                <a href="/jobs" class="inline-block bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg font-semibold transition">
+                    <i class="fas fa-redo mr-2"></i>Clear Filters
+                </a>
+            </div>
+            {{/if}}
+        </div>
+    </div>
+</div>
+
+{{> footer}}
+
+    <script>
+        // Get current filter values from the page or URL
+        function getCurrentJobType() {
+            // Check URL parameters first
+            const urlParams = new URLSearchParams(window.location.search);
+            const jobTypeParam = urlParams.get('jobType');
+            
+            if (jobTypeParam) {
+                return jobTypeParam;
+            }
+            
+            // Otherwise check the dropdown
+            return document.getElementById('jobTypeFilter').value || 'all';
+        }
+
+        // Initialize button states based on current filter
+        function initializeCategoryButtons() {
+            const jobType = getCurrentJobType();
+            document.getElementById('jobTypeFilter').value = jobType;
+            updateCategoryButtonStates(jobType);
+        }
+
+        function updateCategoryButtonStates(activeType) {
+            const allBtn = document.getElementById('btn-all');
+            const municipalityBtn = document.getElementById('btn-municipality');
+            const departmentBtn = document.getElementById('btn-department');
+
+            // Reset all buttons first
+            allBtn.style.cssText = 'background-color: transparent; color: #666; border: 2px solid #ccc;';
+            municipalityBtn.style.cssText = 'background-color: #f0f9ff; color: #0c4a6e; border: 2px solid #bfdbfe;';
+            departmentBtn.style.cssText = 'background-color: #fef9e7; color: #92400e; border: 2px solid #fed7aa;';
+
+            // Highlight active button
+            if (activeType === 'all') {
+                allBtn.style.cssText = 'background-color: #667eea; color: white; border: 2px solid #667eea;';
+            } else if (activeType === 'municipality' || activeType === 'hr') {
+                municipalityBtn.style.cssText = 'background-color: #dbeafe; color: #0c4a6e; border: 2px solid #0284c7;';
+            } else if (activeType === 'department' || activeType === 'manager') {
+                departmentBtn.style.cssText = 'background-color: #fef3c7; color: #92400e; border: 2px solid #f59e0b;';
+            }
+        }
+
+        function filterByJobType(jobType) {
+            const search = document.getElementById('searchInput').value;
+            const municipality = document.getElementById('municipalityFilter').value;
+            const department = document.getElementById('departmentFilter').value;
+            const type = document.getElementById('typeFilter').value;
+            
+            let url = '/jobs?';
+            if (search) url += `search=${encodeURIComponent(search)}&`;
+            if (jobType && jobType !== 'all') url += `jobType=${encodeURIComponent(jobType)}&`;
+            if (municipality && jobType !== 'all') url += `municipality=${encodeURIComponent(municipality)}&`;
+            if (department && jobType !== 'all') url += `department=${encodeURIComponent(department)}&`;
+            if (type) url += `type=${encodeURIComponent(type)}&`;
+            
+            window.location.href = url;
+        }
+
+        function applyFilters() {
+            const search = document.getElementById('searchInput').value;
+            const jobType = document.getElementById('jobTypeFilter').value;
+            const municipality = document.getElementById('municipalityFilter').value;
+            const department = document.getElementById('departmentFilter').value;
+            const type = document.getElementById('typeFilter').value;
+            
+            let url = '/jobs?';
+            if (search) url += `search=${encodeURIComponent(search)}&`;
+            if (jobType && jobType !== 'all') url += `jobType=${encodeURIComponent(jobType)}&`;
+            if (municipality && jobType !== 'all') url += `municipality=${encodeURIComponent(municipality)}&`;
+            if (department && jobType !== 'all') url += `department=${encodeURIComponent(department)}&`;
+            if (type) url += `type=${encodeURIComponent(type)}&`;
+            
+            window.location.href = url;
+        }
+
+        function toggleSaveJob(jobId) {
+            fetch(`/applicant/api/saved-jobs/${jobId}`, { method: 'POST' })
+                .then(r => r.json())
+                .then(data => {
+                    alert(data.message);
+                    location.reload();
+                })
+                .catch(e => console.error(e));
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', initializeCategoryButtons);
+    </script>
+</body>
+</html>

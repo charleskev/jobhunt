@@ -1,0 +1,54 @@
+<!-- Sidebar for Manager/HR 2.0 -->
+<aside class="w-64 bg-white shadow-lg self-start overflow-y-auto" style="position:sticky; top:60px;">
+    <div class="p-6 border-b border-gray-200">
+        <h2 class="text-2xl font-bold text-gray-900">HR 2.0 Portal</h2>
+        <p class="text-sm text-gray-600 mt-1">Recruitment Hub</p>
+    </div>
+
+    <nav class="p-4 space-y-2">
+        <!-- Dashboard -->
+        <div class="mt-4">
+            <a href="/hr2.0/dashboard" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-purple-50 text-gray-700 hover:text-purple-600 transition">
+                <span class="text-xl">📊</span>
+                <span class="font-medium">Dashboard</span>
+            </a>
+        </div>
+
+        <!-- Jobs -->
+        <div class="mt-4">
+            <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide px-4 mb-2">JOBS</p>
+            <a href="/hr2.0/my-jobs" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-purple-50 text-gray-700 hover:text-purple-600 transition">
+                <span class="text-xl">📋</span>
+                <span class="font-medium">All Jobs</span>
+            </a>
+        </div>
+
+        <!-- Applications -->
+        <div class="mt-6">
+            <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide px-4 mb-2">APPLICATIONS</p>
+            <a href="/hr2.0/applications-list" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-purple-50 text-gray-700 hover:text-purple-600 transition">
+                <span class="text-xl">📝</span>
+                <span class="font-medium">All Applications</span>
+            </a>
+            <a href="/hr2.0/applications-list?status=submitted,under_review" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-purple-50 text-gray-700 hover:text-purple-600 transition">
+                <span class="text-xl">⏳</span>
+                <span class="font-medium">Pending Review</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Divider -->
+    <hr class="my-4">
+
+    <!-- Footer Section -->
+    <div class="p-4 space-y-2">
+        <a href="/profile" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-100 text-gray-700 hover:text-gray-900 transition">
+            <span class="text-xl">👤</span>
+            <span class="font-medium text-sm">My Profile</span>
+        </a>
+        <a href="/auth/logout" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-red-50 text-red-600 hover:text-red-700 transition">
+            <span class="text-xl">🚪</span>
+            <span class="font-medium text-sm">Logout</span>
+        </a>
+    </div>
+</aside>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {{> head}}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>{{job.title}} - HuntJob</title>
+</head>
+<body class="bg-gray-50">
+<div class="flex h-screen">
+    {{> sidebar-applicant}}
+    <div class="flex-1 overflow-y-auto">
+        <div class="gradient-bg text-white py-8 px-4">
+            <div class="max-w-6xl mx-auto">
+                <h1 class="text-4xl font-black mb-1">{{job.title}}</h1>
+                <p class="text-purple-100">{{job.department}} • {{job.employmentType}}</p>
+            </div>
+        </div>
+
+        <div class="max-w-6xl mx-auto px-4 py-8">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div class="col-span-2 bg-white rounded-2xl shadow p-6">
+                    <h2 class="text-2xl font-bold mb-3">Job Description</h2>
+                    <p class="text-gray-700 mb-6">{{job.description}}</p>
+
+                    {{#if job.requirements}}
+                    <h3 class="text-xl font-semibold mb-2">Requirements</h3>
+                    <div class="prose text-sm text-gray-700 mb-6">{{{job.requirements}}}</div>
+                    {{/if}}
+
+                    {{#if requiredDocuments}}
+                    <h3 class="text-xl font-semibold mb-2">Required Documents</h3>
+                    <ul class="list-disc list-inside text-gray-700 mb-6">
+                        {{#each requiredDocuments}}
+                        <li>{{this}}</li>
+                        {{/each}}
+                    </ul>
+                    {{/if}}
+                </div>
+
+                <aside class="bg-white rounded-2xl shadow p-6">
+                    <div class="mb-4">
+                        <p class="text-sm text-gray-600">Positions</p>
+                        <p class="text-lg font-bold">{{job.positions}}</p>
+                    </div>
+                    <div class="mb-4">
+                        <p class="text-sm text-gray-600">Deadline</p>
+                        <p class="text-lg font-bold">{{job.deadline}}</p>
+                    </div>
+
+                    <div class="mt-6">
+                        <a href="/applicant/apply?jobId={{job.id}}" class="block w-full text-center bg-green-600 hover:bg-green-700 text-white px-4 py-3 rounded-lg font-semibold">
+                            <i class="fas fa-paper-plane mr-2"></i>Apply Now
+                        </a>
+                        <a href="/jobs" class="block w-full text-center mt-3 bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-3 rounded-lg font-semibold">
+                            Back to Listings
+                        </a>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{> footer}}
+</body>
+</html>
