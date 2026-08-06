@@ -25,6 +25,7 @@
     
 import express from "express";
 import path from "path";
+import os from "os";
 import session from "express-session";
 import flash from "connect-flash";
 import router from "./routes/index.js";
@@ -41,7 +42,10 @@ const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-const UPLOAD_DIR = process.env.UPLOAD_DIR || path.join(process.cwd(), "uploads");
+const UPLOAD_DIR = process.env.UPLOAD_DIR || (process.env.VERCEL ? path.join(os.tmpdir(), "uploads") : path.join(process.cwd(), "uploads"));
+if (!fs.existsSync(UPLOAD_DIR)) {
+  fs.mkdirSync(UPLOAD_DIR, { recursive: true });
+}
 
 app.use(express.static(path.join(process.cwd(), "public")));
 app.use("/uploads", express.static(UPLOAD_DIR));

@@ -25,14 +25,19 @@ SOFTWARE.
 
 import multer from "multer";
 import path from "path";
+import os from "os";
 import fs from "fs";
 
-const UPLOAD_DIR = process.env.UPLOAD_DIR || path.join(process.cwd(), "uploads");
+const UPLOAD_DIR = process.env.UPLOAD_DIR || (process.env.VERCEL ? path.join(os.tmpdir(), "uploads") : path.join(process.cwd(), "uploads"));
 const uploadDirs = [
   path.join(UPLOAD_DIR, "profiles"),
   path.join(UPLOAD_DIR, "documents"),
   path.join(UPLOAD_DIR, "resumes")
 ];
+
+if (!fs.existsSync(UPLOAD_DIR)) {
+  fs.mkdirSync(UPLOAD_DIR, { recursive: true });
+}
 
 uploadDirs.forEach(dir => {
   if (!fs.existsSync(dir)) {
