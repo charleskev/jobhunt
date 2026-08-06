@@ -50,6 +50,10 @@ const defaultSqliteDir = isVercel ? os.tmpdir() : path.join(process.cwd(), "data
 const DB_STORAGE = process.env.DB_STORAGE || path.join(defaultSqliteDir, "huntjob.sqlite");
 const useSqliteFallback = DB_TYPE === "sqlite" || (isVercel && !DB_URL);
 
+if (isVercel && !DB_URL) {
+  console.log("Vercel detected without DATABASE_URL, using SQLite fallback.");
+}
+
 if (useSqliteFallback) {
   const sqliteDir = path.dirname(DB_STORAGE);
   if (!fs.existsSync(sqliteDir)) {
