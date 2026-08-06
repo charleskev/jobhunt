@@ -26,13 +26,32 @@
     
 import { Sequelize } from "sequelize";
 import mysql2 from "mysql2";
+import path from "path";
+import os from "os";
+import fs from "fs";
 
 const DB_URL = process.env.DATABASE_URL || process.env.MYSQL_URL;
+const isServerless = Boolean(
+  process.env.VERCEL ||
+  process.env.VERCEL_URL ||
+  process.env.LAMBDA_TASK_ROOT ||
+  process.env.AWS_LAMBDA_FUNCTION_NAME ||
+  process.env.NOW_REGION ||
+  process.env.K_SERVICE
+);
 const DB_NAME = process.env.DB_NAME || "huntjob";
 const DB_USER = process.env.DB_USER || "root";
 const DB_PASS = process.env.DB_PASS || "";
 const DB_HOST = process.env.DB_HOST || "localhost";
 const DB_PORT = process.env.DB_PORT ? Number(process.env.DB_PORT) : 3306;
+const SQLITE_PATH = process.env.DB_STORAGE || path.join(isServerless ? os.tmpdir() : process.cwd(), "data", "huntjob.sqlite");
+
+if (!DB_URL && !process.env.DB_HOST && !process.env.DB_NAME && isServerless) {
+  const sqliteDir = path.dirname(SQLITE_PATH);
+  if (!fs.existsSync(sqliteDir)) {
+    fs.mkdirSync(sqliteDir, { recursive: true });
+  }
+}
 
 export const sequelize = DB_URL
   ? new Sequelize(DB_URL, {
@@ -42,6 +61,11 @@ export const sequelize = DB_URL
         supportBigNumbers: true,
         bigNumberStrings: true,
       },
+    })
+  : process.env.DB_STORAGE || process.env.DB_TYPE === "sqlite" || isServerless
+  ? new Sequelize({
+      dialect: "sqlite",
+      storage: SQLITE_PATH,
     })
   : new Sequelize(DB_NAME, DB_USER, DB_PASS, {
       host: DB_HOST,
