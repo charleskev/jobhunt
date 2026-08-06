@@ -28,7 +28,8 @@ import path from "path";
 import os from "os";
 import fs from "fs";
 
-const UPLOAD_DIR = process.env.UPLOAD_DIR || (process.env.VERCEL ? path.join(os.tmpdir(), "uploads") : path.join(process.cwd(), "uploads"));
+const isServerless = Boolean(process.env.VERCEL || process.env.LAMBDA_TASK_ROOT || process.env.AWS_LAMBDA_FUNCTION_NAME || process.env.NOW_REGION || process.env.NODE_ENV === "production");
+const UPLOAD_DIR = process.env.UPLOAD_DIR || (isServerless ? path.join(os.tmpdir(), "uploads") : path.join(process.cwd(), "uploads"));
 const uploadDirs = [
   path.join(UPLOAD_DIR, "profiles"),
   path.join(UPLOAD_DIR, "documents"),
