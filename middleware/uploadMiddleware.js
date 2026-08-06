@@ -27,8 +27,13 @@ import multer from "multer";
 import path from "path";
 import fs from "fs";
 
-// Create upload directories if they don't exist
-const uploadDirs = ["uploads/profiles", "uploads/documents", "uploads/resumes"];
+const UPLOAD_DIR = process.env.UPLOAD_DIR || path.join(process.cwd(), "uploads");
+const uploadDirs = [
+  path.join(UPLOAD_DIR, "profiles"),
+  path.join(UPLOAD_DIR, "documents"),
+  path.join(UPLOAD_DIR, "resumes")
+];
+
 uploadDirs.forEach(dir => {
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir, { recursive: true });
@@ -38,12 +43,16 @@ uploadDirs.forEach(dir => {
 // Configure storage for multer
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    let uploadPath = "uploads/documents";
+    let uploadPath = path.join(UPLOAD_DIR, "documents");
 
     if (file.fieldname === "profilePicture") {
-      uploadPath = "uploads/profiles";
+      uploadPath = path.join(UPLOAD_DIR, "profiles");
     } else if (file.fieldname === "resume" || file.fieldname === "document") {
-      uploadPath = "uploads/documents";
+      uploadPath = path.join(UPLOAD_DIR, "documents");
+    }
+
+    if (!fs.existsSync(uploadPath)) {
+      fs.mkdirSync(uploadPath, { recursive: true });
     }
 
     cb(null, uploadPath);

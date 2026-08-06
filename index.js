@@ -41,8 +41,10 @@ const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+const UPLOAD_DIR = process.env.UPLOAD_DIR || path.join(process.cwd(), "uploads");
+
 app.use(express.static(path.join(process.cwd(), "public")));
-app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
+app.use("/uploads", express.static(UPLOAD_DIR));
 
 app.use(session({
   secret: "xianfire-secret-key",

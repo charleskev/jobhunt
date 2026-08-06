@@ -2,12 +2,16 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 
-// Create upload directories if they don't exist
+const PUBLIC_UPLOAD_DIR = process.env.PUBLIC_UPLOAD_DIR || path.join(process.cwd(), 'public', 'uploads');
 const uploadDirs = [
-  'public/uploads/resumes',
-  'public/uploads/documents',
-  'public/uploads/photos'
+  path.join(PUBLIC_UPLOAD_DIR, 'resumes'),
+  path.join(PUBLIC_UPLOAD_DIR, 'documents'),
+  path.join(PUBLIC_UPLOAD_DIR, 'photos')
 ];
+
+if (!fs.existsSync(PUBLIC_UPLOAD_DIR)) {
+  fs.mkdirSync(PUBLIC_UPLOAD_DIR, { recursive: true });
+}
 
 uploadDirs.forEach(dir => {
   if (!fs.existsSync(dir)) {
@@ -50,7 +54,7 @@ const imageFilter = (req, file, cb) => {
  */
 const resumeStorage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'public/uploads/resumes');
+    cb(null, path.join(PUBLIC_UPLOAD_DIR, 'resumes'));
   },
   filename: (req, file, cb) => {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
@@ -63,7 +67,7 @@ const resumeStorage = multer.diskStorage({
  */
 const documentStorage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'public/uploads/documents');
+    cb(null, path.join(PUBLIC_UPLOAD_DIR, 'documents'));
   },
   filename: (req, file, cb) => {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
@@ -76,7 +80,7 @@ const documentStorage = multer.diskStorage({
  */
 const photoStorage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'public/uploads/photos');
+    cb(null, path.join(PUBLIC_UPLOAD_DIR, 'photos'));
   },
   filename: (req, file, cb) => {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
