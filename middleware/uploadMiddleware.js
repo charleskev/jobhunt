@@ -28,7 +28,6 @@ import path from "path";
 import os from "os";
 import fs from "fs";
 
-const isServerless = Boolean(process.env.VERCEL || process.env.LAMBDA_TASK_ROOT || process.env.AWS_LAMBDA_FUNCTION_NAME || process.env.NOW_REGION || process.env.NODE_ENV === "production");
 const TMP_DIR = process.env.TMPDIR || process.env.TEMP || os.tmpdir();
 const isServerless = Boolean(
   process.env.VERCEL ||
