@@ -29,8 +29,16 @@ import { sequelize } from "./models/db.js";
 import { User } from "./models/userModel.js";
 import inquirer from "inquirer";
 
-// Server-level connection (no database selected)
-const rootSequelize = new Sequelize("mysql://root:@localhost:3306/");
+const rootDbUrl =
+  process.env.ROOT_DATABASE_URL ||
+  process.env.MYSQL_URL ||
+  process.env.DATABASE_URL ||
+  "mysql://root:@localhost:3306/";
+
+const rootSequelize = new Sequelize(rootDbUrl, {
+  dialect: "mysql",
+  dialectModule: await import("mysql2").then((mod) => mod.default),
+});
 
 const { createDb } = await inquirer.prompt([
   {
