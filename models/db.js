@@ -48,7 +48,7 @@ const DB_TYPE = process.env.DB_TYPE?.toLowerCase();
 const isVercel = Boolean(process.env.VERCEL || process.env.VERCEL_URL);
 const defaultSqliteDir = isVercel ? os.tmpdir() : path.join(process.cwd(), "data");
 const DB_STORAGE = process.env.DB_STORAGE || path.join(defaultSqliteDir, "huntjob.sqlite");
-const useSqliteFallback = DB_TYPE === "sqlite" || (!DB_URL && !DB_HOST);
+const useSqliteFallback = DB_TYPE === "sqlite" || (isVercel && !DB_URL);
 
 if (useSqliteFallback) {
   const sqliteDir = path.dirname(DB_STORAGE);
