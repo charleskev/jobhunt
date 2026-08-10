@@ -84,17 +84,6 @@ export const sequelize = DB_URL
       },
     })
   : useSqliteFallback
-export function getDbInfo() {
-  return {
-    dbUrlPresent: Boolean(DB_URL),
-    dbType: useSqliteFallback ? "sqlite" : "mysql",
-    storage: useSqliteFallback ? DB_STORAGE : null,
-    host: DB_HOST || null,
-    port: DB_PORT || null,
-    isVercel,
-  };
-}
-
   ? new Sequelize({
       dialect: "sqlite",
       storage: DB_STORAGE,
@@ -110,3 +99,14 @@ export function getDbInfo() {
         bigNumberStrings: true,
       },
     });
+
+export function getDbInfo() {
+  return {
+    dbUrlPresent: Boolean(DB_URL),
+    dbType: useSqliteFallback ? "sqlite" : "mysql",
+    storage: useSqliteFallback ? DB_STORAGE : null,
+    host: DB_HOST || null,
+    port: DB_PORT || null,
+    isVercel,
+  };
+}
