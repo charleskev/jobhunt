@@ -25,6 +25,8 @@
 */
   
 import express from "express";
+import { fileURLToPath } from "url";
+import { dirname } from "path";
 import { homePage } from "../controllers/homeController.js";
 import authRoutes from "./authRoutes.js";
 import publicRoutes from "./publicRoutes.js";
@@ -36,6 +38,8 @@ import adminRoutes from "./adminRoutes.js";
 import { attachUser } from "../middleware/authMiddleware.js";
 import { getDbInfo } from "../models/db.js";
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 const router = express.Router();
 
 // Attach user to all requests
@@ -49,6 +53,29 @@ router.get("/health", (req, res) => {
   } catch (err) {
     res.status(500).json({ status: "error", message: err.message });
   }
+});
+
+// Deployment debug endpoint
+router.get("/deploy-info", (req, res) => {
+  const info = getDbInfo();
+  res.json({
+    status: "ok",
+    cwd: process.cwd(),
+    filename: __filename,
+    dirname: __dirname,
+    nodeVersion: process.version,
+    isVercel: Boolean(process.env.VERCEL || process.env.VERCEL_URL),
+    env: {
+      DATABASE_URL: Boolean(process.env.DATABASE_URL),
+      DB_NAME: Boolean(process.env.DB_NAME),
+      DB_HOST: Boolean(process.env.DB_HOST),
+      DB_USER: Boolean(process.env.DB_USER),
+      DB_PASS: Boolean(process.env.DB_PASS),
+      VERCEL: Boolean(process.env.VERCEL),
+      VERCEL_URL: Boolean(process.env.VERCEL_URL)
+    },
+    db: info,
+  });
 });
 
 // ========== PUBLIC ROUTES ==========
