@@ -72,7 +72,11 @@ router.get("/deploy-info", (req, res) => {
       DB_USER: Boolean(process.env.DB_USER),
       DB_PASS: Boolean(process.env.DB_PASS),
       VERCEL: Boolean(process.env.VERCEL),
-      VERCEL_URL: Boolean(process.env.VERCEL_URL)
+      VERCEL_URL: Boolean(process.env.VERCEL_URL),
+      VERCEL_GIT_COMMIT_SHA: process.env.VERCEL_GIT_COMMIT_SHA || null,
+      VERCEL_GIT_COMMIT_REF: process.env.VERCEL_GIT_COMMIT_REF || null,
+      VERCEL_GIT_REPO_SLUG: process.env.VERCEL_GIT_REPO_SLUG || null,
+      VERCEL_GIT_REPO_OWNER: process.env.VERCEL_GIT_REPO_OWNER || null,
     },
     db: info,
   });
