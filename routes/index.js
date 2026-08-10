@@ -34,11 +34,22 @@ import managerRoutes from "./managerRoutes.js";
 import hr2Routes from "./hr2Routes.js";
 import adminRoutes from "./adminRoutes.js";
 import { attachUser } from "../middleware/authMiddleware.js";
+import { getDbInfo } from "../models/db.js";
 
 const router = express.Router();
 
 // Attach user to all requests
 router.use(attachUser);
+
+// Health check for deployment diagnostics
+router.get("/health", (req, res) => {
+  try {
+    const info = getDbInfo();
+    res.json({ status: "ok", db: info });
+  } catch (err) {
+    res.status(500).json({ status: "error", message: err.message });
+  }
+});
 
 // ========== PUBLIC ROUTES ==========
 // Home page

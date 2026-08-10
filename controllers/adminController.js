@@ -7,7 +7,7 @@ Mindoro State University - Philippines
 
 import { User, Job, Application, AuditLog, sequelize } from "../models/index.js";
 import { Op } from "sequelize";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import { renderError } from "../utils/errorHandler.js";
 
 // Check admin authorization

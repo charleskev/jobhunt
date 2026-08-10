@@ -1,7 +1,7 @@
 import { sequelize } from './models/db.js';
 import { User } from './models/User.js';
 import { Job } from './models/Job.js';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 
 // Usage: node seed-jobs.js
 

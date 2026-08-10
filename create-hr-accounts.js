@@ -1,5 +1,5 @@
 import { User } from "./models/index.js";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 
 async function createAccounts() {
   try {

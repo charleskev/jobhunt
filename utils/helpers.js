@@ -8,10 +8,10 @@ const generateToken = (length = 32) => {
 };
 
 /**
- * Hash password (use bcrypt in production)
+ * Hash password (use bcryptjs in production)
  */
 const hashPassword = async (password) => {
-  const bcrypt = require('bcrypt');
+  const bcrypt = require('bcryptjs');
   const salt = await bcrypt.genSalt(10);
   return await bcrypt.hash(password, salt);
 };
@@ -20,7 +20,7 @@ const hashPassword = async (password) => {
  * Compare passwords
  */
 const comparePassword = async (password, hashedPassword) => {
-  const bcrypt = require('bcrypt');
+  const bcrypt = require('bcryptjs');
   return await bcrypt.compare(password, hashedPassword);
 };
 

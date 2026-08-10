@@ -5,7 +5,7 @@ Copyright (c) 2025 Christian I. Cabrera || XianFire Framework
 Mindoro State University - Philippines
 */
 
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import crypto from "crypto";
 import { User, AuditLog, sequelize } from "../models/index.js";
 import { Op } from "sequelize";

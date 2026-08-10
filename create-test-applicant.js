@@ -4,7 +4,7 @@ Creates a test applicant account to view jobs
 */
 
 import { User } from "./models/index.js";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import { sequelize } from "./models/db.js";
 
 async function createTestApplicant() {

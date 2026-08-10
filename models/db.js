@@ -51,7 +51,15 @@ const DB_STORAGE = process.env.DB_STORAGE || path.join(defaultSqliteDir, "huntjo
 const useSqliteFallback = DB_TYPE === "sqlite" || (isVercel && !DB_URL);
 
 if (isVercel && !DB_URL) {
-  console.log("Vercel detected without DATABASE_URL, using SQLite fallback.");
+  console.warn(
+    "Vercel deployment detected without DATABASE_URL. Falling back to SQLite in temporary storage (ephemeral). For production, set DATABASE_URL to a hosted MySQL instance."
+  );
+}
+
+if (isVercel && DB_TYPE === "sqlite") {
+  console.warn(
+    "DB_TYPE=sqlite on Vercel: using temporary SQLite storage (ephemeral). Set DATABASE_URL for a persistent hosted DB."
+  );
 }
 
 if (useSqliteFallback) {
@@ -76,6 +84,17 @@ export const sequelize = DB_URL
       },
     })
   : useSqliteFallback
+export function getDbInfo() {
+  return {
+    dbUrlPresent: Boolean(DB_URL),
+    dbType: useSqliteFallback ? "sqlite" : "mysql",
+    storage: useSqliteFallback ? DB_STORAGE : null,
+    host: DB_HOST || null,
+    port: DB_PORT || null,
+    isVercel,
+  };
+}
+
   ? new Sequelize({
       dialect: "sqlite",
       storage: DB_STORAGE,

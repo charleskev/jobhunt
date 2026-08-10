@@ -21,7 +21,7 @@
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.17",
-    "bcrypt": "^5.1.0",
+    "bcryptjs": "^2.4.3",
     "connect-flash": "^0.1.1",
     "express": "^4.19.2",
     "express-session": "^1.17.3",
